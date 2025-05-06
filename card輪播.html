@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>護理系首頁</title>
+</head>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    .carousel-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    .carousel-container {
+      width: 960px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+    }
+    .card {
+      width: 300px;
+      height: 300px;
+      background-color: #fff;
+      margin-right: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+    button {
+      padding: 1rem;
+      font-size: 1.2rem;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+	 
+
+	  .card:hover {
+  background-color: #007bff;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.card:hover .content {
+  color: #fff;
+}
+  </style>
+	
+<div class="carousel-wrapper">
+  <button id="prevBtn">←</button>
+
+  <div class="carousel-container">
+    <div class="carousel-track" id="carousel">
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E7%B6%B2%E9%A0%81%E5%9C%96%E7%89%87.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="content"><h4>教學研討會-超越傳統教學-AI助力下的教材設計新革命及AI實用工具教學</h4></div>
+		  </div>
+		 
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E7%B3%BB%E6%89%80%E5%85%AC%E5%91%8A-1.png" alt="卡片2圖片" style="width:100%; height: 70%">
+		   <div class="content"><h4>113(2)學期弘光科技大學護理系二技（含進修部）學生實習課程折抵結果公告</h4></div>
+		  </div>
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E7%B6%B2%E9%A0%81%E5%9C%96%E7%89%87.png" alt="卡片3圖片" style="width:100%; height: 70%">
+		   <div class="content"><h3>113學年度校外實習優異獎學金學生資料成果展</h3></div>
+		  </div>
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/114%E5%AD%B8%E5%B9%B4%E7%94%B3%E8%AB%8B%E5%85%A5%E5%AD%B8%E8%AB%AE%E8%A9%A2%E7%BE%A4%E7%B5%84.png" alt="卡片4圖片" style="width:100%; height: 70%">
+		   <div class="content"><h3>114學年申請入學諮詢群組連結</h3></div>
+		  </div>
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/S__103260242-2.jpg" alt="卡片5圖片" style="width:100%;height: 70%">
+		   <div class="content"><h3>歡迎易三倉大學蒞臨 弘光科技大學護理系！</h3></div>
+		  </div>
+      <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/707982.jpg" alt="卡片6圖片" style="width:100%; height: 70%">
+		   <div class="content"><h3>給申請入學同學的一席話</h3></div>
+		  </div>
+	  <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2-2025-03-05-124536.png" alt="卡片7圖片" style="width:100%; height: 70%">
+		   <div class="content"><h3>護理系招生宣傳PPT</h3></div>
+		 </div> 
+    </div>
+  </div>
+
+  <button id="nextBtn">→</button>
+</div>
+
+<script>
+  const track = document.getElementById("carousel");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const cardsPerView = 3;
+  const cardWidth = 330; // 卡片寬度 + margin-right
+  const totalCards = track.children.length;
+  let currentIndex = 0;
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < totalCards - cardsPerView) {
+      currentIndex++;
+      updateCarousel();
+    }
+  });
+
+  function updateCarousel() {
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= totalCards - cardsPerView;
+  }
+
+  updateCarousel();
+</script>
+
+</body>
+</html>
