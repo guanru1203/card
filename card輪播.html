@@ -63,6 +63,36 @@
 }
 	  a{text-decoration: none;
 	    color: #000000;}
+	  @media (max-width: 600px) {
+  .carousel-container {
+    width: 100%; /* 滿版 */
+    max-width: 330px; /* 卡片寬度 */
+    margin: 0 auto;
+  }
+
+  .carousel-track {
+    gap: 0;
+  }
+
+  .carousel-track > * {
+    min-width: 100%;
+    margin-right: 0;
+  }
+
+  .carousel-wrapper {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  #prevBtn,
+  #nextBtn {
+    position: static;
+  }
+}
   </style>
 	<body>
 		<!-- 公告標題 -->
@@ -162,37 +192,40 @@
 </div>
 
 <script>
-  const track = document.getElementById("carousel");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const cardsPerView = 3;
-  const cardWidth = 330; // 卡片寬度 + margin-right
-  const totalCards = track.children.length;
+  const carousel = document.getElementById('carousel');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
   let currentIndex = 0;
 
-  prevBtn.addEventListener("click", () => {
+  function getCardWidth() {
+    const card = carousel.querySelector('.card');
+    return card.offsetWidth + parseInt(getComputedStyle(card).marginRight);
+  }
+
+  function updateCarousel() {
+    const cardWidth = getCardWidth();
+    carousel.style.transform = `translateX(-${cardWidth * currentIndex}px)`;
+  }
+
+  prevBtn.addEventListener('click', () => {
     if (currentIndex > 0) {
       currentIndex--;
       updateCarousel();
     }
   });
 
-  nextBtn.addEventListener("click", () => {
-    if (currentIndex < totalCards - cardsPerView) {
+  nextBtn.addEventListener('click', () => {
+    const cardCount = carousel.children.length;
+    const maxIndex = cardCount - 1;
+    if (currentIndex < maxIndex) {
       currentIndex++;
       updateCarousel();
     }
   });
 
-  function updateCarousel() {
-    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= totalCards - cardsPerView;
-  }
-
-  updateCarousel();
+  window.addEventListener('resize', updateCarousel);
 </script>
-
 </body>
 </html>
 
