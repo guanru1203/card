@@ -82,11 +82,10 @@
     gap: 0;
   }
 
-  .carousel-track > * {
-    min-width: 100%;
-    margin-right: 0;
-  }
-
+ .carousel-track > * {
+  min-width: 100%;
+  margin-right: 0;
+}
   .carousel-wrapper {
     width: 100%;
     max-width: 100%;
@@ -236,39 +235,50 @@
 </div>
 
 <script>
-  const carousel = document.getElementById('carousel');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
+  const track = document.getElementById('carousel');
+  const prevButton = document.getElementById('prevBtn');
+  const nextButton = document.getElementById('nextBtn');
 
   let currentIndex = 0;
 
-  function getCardWidth() {
-    const card = carousel.querySelector('.card');
-    return card.offsetWidth + parseInt(getComputedStyle(card).marginRight);
-  }
-
   function updateCarousel() {
-    const cardWidth = getCardWidth();
-    carousel.style.transform = `translateX(-${cardWidth * currentIndex}px)`;
+    const cards = document.querySelectorAll('.carousel-track > *');
+    const cardWidth = cards[0].offsetWidth;
+    const gap = parseInt(getComputedStyle(track).gap) || 0;
+    const screenWidth = window.innerWidth;
+
+    const visibleCards = screenWidth <= 600 ? 1 : Math.floor(track.parentElement.offsetWidth / (cardWidth + gap));
+    const maxIndex = cards.length - visibleCards;
+
+    track.style.transform = `translateX(-${(cardWidth + gap) * currentIndex}px)`;
+
+    prevButton.disabled = currentIndex <= 0;
+    nextButton.disabled = currentIndex >= maxIndex;
   }
 
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      updateCarousel();
-    }
+  prevButton.addEventListener('click', () => {
+    currentIndex = Math.max(currentIndex - 1, 0);
+    updateCarousel();
   });
 
-  nextBtn.addEventListener('click', () => {
-    const cardCount = carousel.children.length;
-    const maxIndex = cardCount - 1;
-    if (currentIndex < maxIndex) {
-      currentIndex++;
-      updateCarousel();
-    }
+  nextButton.addEventListener('click', () => {
+    const cards = document.querySelectorAll('.carousel-track > *');
+    const cardWidth = cards[0].offsetWidth;
+    const gap = parseInt(getComputedStyle(track).gap) || 0;
+    const visibleCards = window.innerWidth <= 600 ? 1 : Math.floor(track.parentElement.offsetWidth / (cardWidth + gap));
+    const maxIndex = cards.length - visibleCards;
+
+    currentIndex = Math.min(currentIndex + 1, maxIndex);
+    updateCarousel();
   });
 
-  window.addEventListener('resize', updateCarousel);
+  window.addEventListener('resize', () => {
+    updateCarousel();
+  });
+
+  window.addEventListener('load', () => {
+    updateCarousel();
+  });
 </script>
 </body>
 </html>
