@@ -164,34 +164,35 @@
 </div>
 
 <script>
-  const carousel = document.getElementById('carousel');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = '→';
-  nextBtn.style.marginLeft = '10px';
-  nextBtn.style.padding = '1rem';
-  nextBtn.style.fontSize = '1.2rem';
-  nextBtn.style.border = 'none';
-  nextBtn.style.backgroundColor = '#007bff';
-  nextBtn.style.color = 'white';
-  nextBtn.style.borderRadius = '10px';
-  nextBtn.style.cursor = 'pointer';
+  const track = document.getElementById("carousel");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const cardsPerView = 3;
+  const cardWidth = 330; // 卡片寬度 + margin-right
+  const totalCards = track.children.length;
+  let currentIndex = 0;
 
-  document.querySelector('.carousel-wrapper').appendChild(nextBtn);
-
-  let scrollAmount = 0;
-  const cardWidth = 330; // 300px + 30px margin
-
-  prevBtn.addEventListener('click', () => {
-    scrollAmount = Math.max(scrollAmount - cardWidth, 0);
-    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
   });
 
-  nextBtn.addEventListener('click', () => {
-    const maxScroll = carousel.scrollWidth - 960;
-    scrollAmount = Math.min(scrollAmount + cardWidth, maxScroll);
-    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < totalCards - cardsPerView) {
+      currentIndex++;
+      updateCarousel();
+    }
   });
+
+  function updateCarousel() {
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= totalCards - cardsPerView;
+  }
+
+  updateCarousel();
 </script>
 
 </body>
