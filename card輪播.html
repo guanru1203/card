@@ -71,43 +71,34 @@
 }
 	  a{text-decoration: none;
 	    color: #000000;}
-	@media (max-width: 600px) {
+	  @media (max-width: 600px) {
   .carousel-container {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  .carousel-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    width: 100%; /* 滿版 */
+    max-width: 280px; /* 卡片寬度 */
+    margin: 0 auto;
   }
 
   .carousel-track {
-    display: flex;
-    gap: 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    padding: 0 10px;
+    gap:0;
   }
 
-  .carousel-track > * {
-    flex: 0 0 auto;
-    width: 260px; /* 手機版卡片寬度小一點 */
-    height: 180px; /* 卡片高度也縮小 */
-    scroll-snap-align: center;
-    margin-right: 10px;
+ .carousel-track > * {
+  min-width: 100%;
+  margin-right: 0;
+}
+  .carousel-wrapper {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
 
   #prevBtn,
   #nextBtn {
     position: static;
-    margin: 0 5px;
   }
-}
 	  @media (min-width: 601px) {
   .carousel-wrapper {
     display: flex;
