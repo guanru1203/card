@@ -258,7 +258,12 @@
 
   prevButton.addEventListener('click', () => {
     currentIndex = Math.max(currentIndex - 1, 0);
-    updateCarousel();
+    updateCarousel(
+const containerWidth = track.parentElement.offsetWidth;
+const offset = screenWidth <= 600 ? (containerWidth - cardWidth) / 2 : 0;
+
+track.style.transform = `translateX(calc(${offset}px - ${(cardWidth + gap) * currentIndex}px))`;	    
+    );
   });
 
   nextButton.addEventListener('click', () => {
