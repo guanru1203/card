@@ -218,29 +218,7 @@
   }
 
   updateCarousel();
-	 const carousel = document.getElementById('carousel');
-  const prevBtn = document.getElementById('prevBtn');
-  const cardWidth = 330; // 卡片寬度 (含間距)
 
-  let scrollPosition = 0;
-
-  prevBtn.addEventListener('click', () => {
-    scrollPosition -= cardWidth;
-    if (scrollPosition < 0) scrollPosition = 0;
-    carousel.style.transform = `translateX(-${scrollPosition}px)`;
-  });
-
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = '→';
-  nextBtn.id = 'nextBtn';
-  prevBtn.insertAdjacentElement('afterend', nextBtn);
-
-  nextBtn.addEventListener('click', () => {
-    const maxScroll = carousel.scrollWidth - document.querySelector('.carousel-container').offsetWidth;
-    scrollPosition += cardWidth;
-    if (scrollPosition > maxScroll) scrollPosition = maxScroll;
-    carousel.style.transform = `translateX(-${scrollPosition}px)`;
-  });
 </script>
 
 </body>
