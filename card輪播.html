@@ -16,26 +16,38 @@
       margin: 0;
       background: #f5f5f5;
     }
-
-
-   button {
-  width: 40px;
-  height: 40px;
-  font-size: 24px; /* 調整 icon 大小 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%;
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-
+    .carousel-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    .carousel-container {
+      width: 960px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+    }
+    .card {
+      width: 300px;
+      height: 300px;
+      background-color: #fff;
+      margin-right: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+    button {
+      padding: 1rem;
+      font-size: 1.2rem;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
     button:disabled {
       background-color: #ccc;
       cursor: not-allowed;
@@ -53,80 +65,6 @@
 }
 	  a{text-decoration: none;
 	    color: #000000;}
-	@media (max-width: 600px) {
-  .carousel-container {
-    width: 100%; /* 滿版 */
-    max-width: 280px; /* 卡片寬度 */
-    margin: 0 auto;
-  }
-
-  .carousel-track {
-    gap:0;
-  }
-
- .carousel-track > * {
-  min-width: 100%;
-  margin-right: 0;
-}
-  .carousel-wrapper {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  #prevBtn,
-  #nextBtn {
-    position: static;
-  }}
-	  @media (min-width: 601px) {
-  .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row; /* 重點：橫向排列 */
-    gap: 10px;
-  }
-
- 
-#prevBtn {
-  left: 40px;
-}
-
-#nextBtn {
-  right: 40px;
-}
-
-.carousel-container {
-      width: 960px;
-      overflow: hidden;
-    }
- 
-    .card {
-      width: 300px;
-      height: 300px;
-      background-color: #fff;
-      margin-right: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      padding: 1rem;
-      box-sizing: border-box;
-      flex-shrink: 0;
-    }
-  .carousel-track {
-    display: flex;
-    transition: transform 0.3s ease;
-    gap: 20px;
-  }
-
-  .card {
-    flex: 0 0 auto;
-    width: 300px;
-  }
-}
-
   </style>
 	<body>
 		<!-- 公告標題 -->
