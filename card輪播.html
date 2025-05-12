@@ -164,54 +164,40 @@
 </div>
 
 <script>
-  const track = document.getElementById('carousel');
-  const prevButton = document.getElementById('prevBtn');
-  const nextButton = document.getElementById('nextBtn');
-
+  const track = document.getElementById("carousel");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const cardsPerView = 3;
+  const cardWidth = 330; // 卡片寬度 + margin-right
+  const totalCards = track.children.length;
   let currentIndex = 0;
 
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < totalCards - cardsPerView) {
+      currentIndex++;
+      updateCarousel();
+    }
+  });
+
   function updateCarousel() {
-    const cards = document.querySelectorAll('.carousel-track > *');
-    const cardWidth = cards[0].offsetWidth;
-    const gap = parseInt(getComputedStyle(track).gap) || 0;
-    const screenWidth = window.innerWidth;
-
-    const visibleCards = screenWidth <= 600 ? 1 : Math.floor(track.parentElement.offsetWidth / (cardWidth + gap));
-    const maxIndex = cards.length - visibleCards;
-
-    track.style.transform = `translateX(-${(cardWidth + gap) * currentIndex}px)`;
-
-    prevButton.disabled = currentIndex <= 0;
-    nextButton.disabled = currentIndex >= maxIndex;
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= totalCards - cardsPerView;
   }
 
-  prevButton.addEventListener('click', () => {
-    currentIndex = Math.max(currentIndex - 1, 0);
-    updateCarousel(	    
-    );
-  });
-
-  nextButton.addEventListener('click', () => {
-    const cards = document.querySelectorAll('.carousel-track > *');
-    const cardWidth = cards[0].offsetWidth;
-    const gap = parseInt(getComputedStyle(track).gap) || 0;
-    const visibleCards = window.innerWidth <= 600 ? 1 : Math.floor(track.parentElement.offsetWidth / (cardWidth + gap));
-    const maxIndex = cards.length - visibleCards;
-
-    currentIndex = Math.min(currentIndex + 1, maxIndex);
-    updateCarousel();
-  });
-
-  window.addEventListener('resize', () => {
-    updateCarousel(
-
-    );
-  });
-
-  window.addEventListener('load', () => {
-    updateCarousel();
-  });
+  updateCarousel();
 </script>
+
+</body>
+</html>
+
 </body>
 </html>
 
