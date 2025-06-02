@@ -4,15 +4,11 @@
 <title>護理系首頁</title>
 </head>
   <style>
- .carousel-wrapper {
+.carousel-wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 10px;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
+  justify-content: center;
+  gap: 10px; /* 卡片與按鈕間距 */
   flex-wrap: nowrap;
 }
 
@@ -387,37 +383,45 @@ a {
 
 <script>
   const track = document.getElementById("carousel");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-  const cardWidth = 330; // 卡片寬度 + margin
-  let currentIndex = 0;
+const cardWidth = 330; // 每張卡片寬度（含 margin）
+let currentIndex = 0;
 
-  function updateCarousel() {
-    const screenWidth = window.innerWidth;
-    const cardsPerView = screenWidth <= 600 ? 1 : 3;
-    const maxIndex = track.children.length - cardsPerView;
+// 決定畫面同時顯示幾張（手機1張，平板以上3張）
+function getCardsPerView() {
+  return window.innerWidth <= 600 ? 1 : 3;
+}
 
-    currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
-    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+// 更新 Carousel 的位置
+function updateCarousel() {
+  const cardsPerView = getCardsPerView();
+  const maxIndex = track.children.length - cardsPerView;
 
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= maxIndex;
-  }
+  currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+  track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
 
-  prevBtn.addEventListener("click", () => {
-    currentIndex--;
-    updateCarousel();
-  });
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex >= maxIndex;
+}
 
-  nextBtn.addEventListener("click", () => {
-    currentIndex++;
-    updateCarousel();
-  });
-
-  window.addEventListener("resize", updateCarousel);
-
+// 左右按鈕事件（每次滑動一張）
+prevBtn.addEventListener("click", () => {
+  currentIndex -= 1;
   updateCarousel();
+});
+
+nextBtn.addEventListener("click", () => {
+  currentIndex += 1;
+  updateCarousel();
+});
+
+// 縮放視窗時更新顯示
+window.addEventListener("resize", updateCarousel);
+
+// 初始化
+updateCarousel();
 </script>
 
 
@@ -426,7 +430,7 @@ a {
 	
 	
 	<!--學習資源-->
-	
+	<br>
 	
 <div class="LearningResources">
     <div class="button-group">
