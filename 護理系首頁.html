@@ -4,88 +4,88 @@
 <title>護理系首頁</title>
 </head>
   <style>
-	  /**card**/
-   .carousel-wrapper {
-      display: flex;
-      align-items: center;
-    }
-    .carousel-container {
-      width: 960px;
-      overflow: hidden;
-    }
-    .carousel-track {
-      display: flex;
-      transition: transform 0.3s ease-in-out;
-    }
-    .card {
-      width: 300px;
-      height: 300px;
-      background-color: #fff;
-      margin-right: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      padding: 1rem;
-      box-sizing: border-box;
-      flex-shrink: 0;
-		color: #000000;
-    }
-   .prevBtn {
-      padding: 1rem;
-      font-size: 1.2rem;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      z-index: 10;
-    }
-   .prevBtn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-	 
+ .carousel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+}
 
-	  .card:hover {
+.carousel-container {
+  overflow: hidden;
+  width: 960px;
+  max-width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card {
+  width: 300px;
+  height: 300px;
+  background-color: #F0F0F0;
+  margin-right: 30px;
+  box-shadow: 0 8px 8px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.card:hover {
   background-color: #007bff;
   color: #fff;
-  transition: all 0.3s ease;
 }
 
-.card:hover .content {
+.card:hover .cardcontent {
   color: #fff;
 }
-	  a{text-decoration: none;
-	    color: #000000;}
 
-@media (max-width: 1024px) {
-  .carousel-container {
-    width: 660px; /* 適合顯示兩張卡片 */
-  }
+.cardbutton {
+  padding: 1rem;
+  font-size: 1.5rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.cardbutton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+/* ✅ 手機 RWD */
+@media (max-width: 600px) {
   .card {
     width: 300px;
+   
     margin-right: 30px;
   }
-}
 
-@media (max-width: 600px) {
- .carousel-container {
-    width: 330px; /* 適合顯示一張卡片 */
-  }
-  .card {
-    width: 280px;
-    margin-right: 25px;
-   margin-left: 25px;
-  }
-  .prevBtn  button {
-    padding: 0.5rem;
-    font-size: 1rem;
-    z-index: 10;
-  position: relative;
-  display: block;
-	    margin:0;
+  .carousel-container {
+    width: 100%;
   }
 
+  .carousel-track {
+    gap: 0;
+  }
 }
+
 
 
   /**學習資源**/
@@ -138,6 +138,43 @@
 .button-group button:hover img {
   filter: brightness(0) invert(1); /* 變成白色 */
 }
+	  
+@media (max-width: 600px) {
+  .LearningResources {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  .button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+    gap: 15px;
+  }
+
+  .button-group button {
+    width: 80%;
+    max-width: 250px;
+    height: auto;
+    font-size: 24px;
+    padding: 16px;
+  }
+
+  .button-group button img {
+    width: 40%;
+    margin-bottom: 8px;
+  }
+}	  
+	  
+	  
+	  
+	  
 	  
  /**校園生活**/	  
 .schoollife {
@@ -289,10 +326,101 @@
 	<body>
 		
 		
-		<!-- 得獎與成就 -->
 
 
-<div class="title" style=" width: 100%; overflow: hidden;"><h2 style="text-align: center;"><strong>得獎與成就</strong></h2><center><iframe style="border: none; overflow: hidden;" src="https://guanru1203.github.io/card/card輪播.html" width="100%" height="400px" scrolling="no"></iframe></center></div>
+<!-- 得獎與成就 -->
+		
+<center><h1 >得獎與成就</h1></center>
+<div class="carousel-wrapper">
+  <button class="cardbutton" id="prevBtn">←</button>
+
+  <div class="carousel-container">
+    <div class="carousel-track" id="carousel">
+		
+		<a href="https://nur.hk.edu.tw/%e8%b3%80%e8%ad%b7%e7%90%86%e7%b3%bb%e7%8d%b2%e6%95%99%e8%82%b2%e9%83%a8114%e5%b9%b4%e6%96%b0%e5%8d%97%e5%90%91%e5%ad%b8%e6%b5%b7%e7%af%89%e5%a4%a2%e8%a8%88%e7%95%ab/" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/教育部計畫.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>賀!護理系獲兩項教育部114年新南向學海築夢計畫</h4></div>
+		  </div></a>
+		
+	 
+		<a href="https://www.instagram.com/p/DJTZDKIBQtv/?img_index=1 " target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/516錄取名單-2.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>恭喜!張彩秀老師與校友許麗蘭榮獲優良護理人員獎項</h4></div>
+		  </div></a>  
+		
+		
+		<a href="https://www.instagram.com/p/DJpk-mSTA-z/?img_index=2" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/禮品萱.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>本系「第八屆臺中市英文菁英盃」表現傑出</h4></div>
+		  </div></a>  
+		
+		
+		
+		
+		<a href="https://www.instagram.com/p/DIyGcmCBDxK/" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/禮品萱.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>恭喜!李品萱同學獲獎</h4></div>
+		  </div></a>  
+		
+		
+		
+	     <a href="https://nur.hk.edu.tw/%e5%bc%98%e5%85%89%e7%a7%91%e6%8a%80%e5%a4%a7%e5%ad%b8-%e8%ad%b7%e7%90%86%e7%b3%bb-%e6%95%ac%e9%82%80%e5%8f%83%e8%88%87%e5%9c%8b%e9%9a%9b%e4%ba%a4%e6%b5%81%e8%a8%88%e7%95%ab/ " target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E5%9C%8B%E9%9A%9B%E4%BA%A4%E6%B5%81.png" alt="卡片1圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>弘光科技大學-護理系-敬邀參與國際交流計畫</h4></div>
+		  </div></a>  
+		
+	  
+   
+      <a href="https://nur.hk.edu.tw/113%e5%ad%b8%e5%b9%b4%e5%ba%a6%e6%a0%a1%e5%a4%96%e5%af%a6%e7%bf%92%e5%84%aa%e7%95%b0%e7%8d%8e%e5%ad%b8%e9%87%91%e5%ad%b8%e7%94%9f%e8%b3%87%e6%96%99%e6%88%90%e6%9e%9c%e5%b1%95/" target="_blank"><div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E7%B6%B2%E9%A0%81%E5%9C%96%E7%89%87.png" alt="卡片3圖片" style="width:100%; height: 70%">
+		   <div class="cardcontent"><h3>113學年度校外實習優異獎學金學生資料成果展</h3></div>
+		  </div></a>
+   
+    
+	 
+		 </div> 
+    </div>
+  
+
+  <button class="cardbutton" id="nextBtn">→</button></div>
+</div>
+
+<script>
+  const track = document.getElementById("carousel");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  const cardWidth = 330; // 卡片寬度 + margin
+  let currentIndex = 0;
+
+  function updateCarousel() {
+    const screenWidth = window.innerWidth;
+    const cardsPerView = screenWidth <= 600 ? 1 : 3;
+    const maxIndex = track.children.length - cardsPerView;
+
+    currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= maxIndex;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    currentIndex--;
+    updateCarousel();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentIndex++;
+    updateCarousel();
+  });
+
+  window.addEventListener("resize", updateCarousel);
+
+  updateCarousel();
+</script>
+
+
 
 		
 	
