@@ -195,7 +195,37 @@ a {
   }
 }	  
 	  
-	  
+ /* Modal 基本樣式 */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: center;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
 	  
 	  
 	  
@@ -398,9 +428,7 @@ a {
 		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/03/%E7%B6%B2%E9%A0%81%E5%9C%96%E7%89%87.png" alt="卡片3圖片" style="width:100%; height: 70%">
 		   <div class="cardcontent"><h3>113學年度校外實習優異獎學金學生資料成果展</h3></div>
 		  </div></a>
-   
-    
-	 
+
 		 </div> 
     </div>
   
@@ -461,13 +489,67 @@ updateCarousel();
 	
 <div class="LearningResources">
     <div class="button-group">
-      <button ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/open-book.png" width="50%"  alt="icon"><br>課程</button>
-      <button><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/virtual-reality-glasses.png" width="50%" alt="icon"><br>設備</button>
-      <button><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/brain.png" width="50%"  alt="icon"><br>實習</button>
-      <button><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/suitcase.png" width="50%"  alt="icon"><br>就業</button>
-    </div>
-		
-</div>		
+      <button onclick="openModal('modal1')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/open-book.png" width="50%"  alt="icon"><br>課程</button>
+      <button onclick="openModal('modal2')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/virtual-reality-glasses.png" width="50%" alt="icon"><br>設備</button>
+      <button onclick="openModal('modal3')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/brain.png" width="50%"  alt="icon"><br>實習</button>
+      <button onclick="openModal('modal4')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/suitcase.png" width="50%"  alt="icon"><br>就業</button>
+    </div>	
+</div>	
+	
+<!-- Modal 區塊 -->
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal1')">&times;</span>
+    <h2>課程資訊</h2>
+	<p>在弘光護理系，您將系統性學習完整護理知識，取得基本護理技術認證，並通過仿真國考作為畢業門檻，全方位打造臨床實戰力，為您的護理職涯打下最穩固的基礎。</p>
+    <p><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/課程圖_工作區域-1.png" width="300px" height="300px"></p>
+  </div>
+</div>
+
+<div id="modal2" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal2')">&times;</span>
+    <h2>設備資訊</h2>
+	<p>弘光護理與全台多所教學醫院長期合作，包含台大、榮總、光田、中山等知名醫療機構，奠定職場優勢。</p>
+    <p><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/實習醫院.png" width="400px" height="300px"></p>
+  </div>
+</div>
+
+<div id="modal3" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal3')">&times;</span>
+    <h2>實習資訊</h2>
+    <p>這裡是實習的詳細介紹。</p>
+  </div>
+</div>
+
+<div id="modal4" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal4')">&times;</span>
+    <h2>就業資訊</h2>
+    <p>這裡是就業的詳細介紹。</p>
+  </div>
+</div>
+	
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).style.display = "block";
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  // 點擊 modal 區域外關閉
+  window.onclick = function(event) {
+    document.querySelectorAll('.modal').forEach(modal => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
+</script>
 	
 		
 		
