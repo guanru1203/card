@@ -197,29 +197,28 @@ a {
 	  
  /* Modal 基本樣式 */
     .modal {
-      display: none; 
       position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* 背景半透明 */
+  display: none; /* 一開始隱藏 */
     }
 
-.modal-content {
-  position: absolute;
-  top: 5%; /* 靠近頂端 */
-  left: 50%;
-  transform: translateX(-50%); /* 水平置中 */
+    .modal-content {
+    position: absolute; /* 讓 JS 可以動態設定位置 */
   background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 80%;
   max-width: 400px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   text-align: center;
-}
+    }
+
     .close {
       position: absolute;
       top: 10px;
@@ -549,22 +548,33 @@ updateCarousel();
 	
 
 <script>
-  function openModal(id) {
-    document.getElementById(id).style.display = "block";
-  }
+function openModal(modalId, event) {
+  const modal = document.getElementById(modalId);
+  const content = modal.querySelector('.modal-content');
 
-  function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-  }
+  // 顯示 modal
+  modal.style.display = "block";
 
-  // 點擊 modal 區域外關閉
-  window.onclick = function(event) {
-    document.querySelectorAll('.modal').forEach(modal => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    });
+  // 如果提供事件（點擊位置），設定浮出視窗的位置
+  if (event) {
+    const x = event.clientX;
+    const y = event.clientY;
+
+    // 簡單偏移避免剛好遮住按鈕
+    content.style.left = (x + 10) + "px";
+    content.style.top = (y + 10) + "px";
+  } else {
+    // 預設 fallback（放在畫面中央）
+    content.style.left = "50%";
+    content.style.top = "20%";
+    content.style.transform = "translate(-50%, 0)";
   }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+}
 </script>
 	
 		
