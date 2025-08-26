@@ -372,6 +372,25 @@ a {
 		color:#ffffff;
     }	  
 	  
+    .video-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 三等分 */
+      gap: 20px; /* 每塊之間的間距 */
+      max-width: 1200px;
+      margin: auto;
+    }
+    .video-row iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9; /* 保持影片比例 */
+      border-radius: 12px;
+      border: none;
+    }
+	     @media (max-width: 600px) {
+      .video-row {
+        grid-template-columns: 1fr;
+      }
+    }
+	  
 	  
   </style>
 
@@ -389,6 +408,24 @@ a {
 
   <div class="carousel-container">
     <div class="carousel-track" id="carousel">
+		
+		<a href="https://tpr.moe.edu.tw/achievement/plan-detail?id=0cefa29e943eaa96019444073459004a" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/08/賀林美伶老師-獲學門績優計畫.png"  style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>賀林美伶老師獲學門績優計畫</h4></div>
+		  </div></a>
+		
+		
+		<a href="https://nur.hk.edu.tw/%e6%81%ad%e5%96%9c%e6%9c%ac%e9%99%a2%e5%9b%9b%e4%bd%8d%e5%90%8c%e5%ad%b8%e7%8d%b2%e7%a0%94%e7%a9%b6%e8%a8%88%e7%95%ab/" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/07/網頁封面圖.png"  style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>恭喜本院四位同學獲得研究計畫</h4></div>
+		  </div></a>
+		
+		<a href="https://nur.hk.edu.tw/%e6%81%ad%e5%96%9c%e6%95%99%e8%82%b2%e9%83%a8-%e5%a4%a7%e5%b0%88%e7%94%9f%e5%b0%88%e9%a1%8c%e8%a8%88%e7%95%ab%e9%80%9a%e9%81%8e-%e5%85%a8%e6%a0%a115%e4%bb%b6%ef%bc%8c%e8%ad%b7%e7%90%86%e7%b3%bb4/" target="_blank"> <div class="card">
+		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/網頁封面圖.png"  style="width:100%; height: 70%">
+		   <div class="cardcontent"><h4>恭喜教育部 大專生專題計畫通過全校15件，護理系 4件</h4></div>
+		  </div></a>
+		
+		
 		
 		<a href="https://nur.hk.edu.tw/%e3%80%90app%e5%89%b5%e6%84%8f%e7%ab%b6%e8%b3%bd%ef%bc%8d%e7%99%bc%e6%83%b3%e7%b5%84%e3%80%91%e5%8b%87%e5%a5%aa-%f0%9f%a5%87%e7%ac%ac%e4%b8%80%e5%90%8d/" target="_blank"> <div class="card">
 		   <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/app創意競賽.png"  style="width:100%; height: 70%">
@@ -694,8 +731,14 @@ function closeModal(modalId) {
     });
   });
 </script>		
-		
-		
-		
+
+  <div class="video-container">
+  <div class="video-row">
+    <iframe src="https://www.youtube.com/embed/jTD3RbKdIpY?si=dpmT-oRuVjFk12Wk" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/Vjoqnkq2atY?si=Bk-FpuhRxsbSl4OI" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/-_G8oyy_KWs?si=De1hT0fkL1nrufO9" allowfullscreen></iframe>
+  </div>
+  </div>
+	
 </body>
 </html>
