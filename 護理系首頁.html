@@ -385,7 +385,19 @@ a {
       border-radius: 12px;
       border: none;
     }
-	  
+    /* 平板 (<= 992px) 變成一列兩塊 */
+    @media (max-width: 992px) {
+      .video-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* 手機 (<= 600px) 變成一列一塊 */
+    @media (max-width: 600px) {
+      .video-row {
+        grid-template-columns: 1fr;
+      }
+    }
 	  
   </style>
 
