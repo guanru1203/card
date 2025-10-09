@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學生志願填寫表單</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+label { display: block; margin-top: 10px; }
+select, input { width: 300px; padding: 5px; margin-top: 5px; }
+.section { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
+button { padding: 10px 20px; margin-top: 10px; }
+#message { margin-top: 10px; color: green; }
+#staffSection { margin-top: 30px; border: 1px solid #aaa; padding: 10px; }
+</style>
+</head>
+<body>
+
+<h2>學生醫院志願填寫表單</h2>
+
+<form id="volunteerForm">
+  <div class="section">
+    <label>姓名: <input type="text" name="name" required></label>
+    <label>學號: <input type="text" name="studentId" required></label>
+    <label>手機號: <input type="text" name="phone" required></label>
+    <label>學制:
+      <select name="program" required>
+        <option value="">請選擇學制</option>
+        <option value="日二技">日二技</option>
+        <option value="進四技">進四技</option>
+        <option value="日四技">日四技</option>
+      </select>
+    </label>
+    <label>是否申請醫院獎學金:
+      <select name="scholarship" required>
+        <option value="">請選擇</option>
+        <option value="是">是</option>
+        <option value="否">否</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="section">
+    <h3>志願填寫</h3>
+    <label>志願一醫院:
+      <select name="hospital1" id="hospital1" required></select>
+    </label>
+    <label>志願一單位:
+      <select name="unit1" id="unit1" required></select>
+    </label>
+
+    <label>志願二醫院:
+      <select name="hospital2" id="hospital2" required></select>
+    </label>
+    <label>志願二單位:
+      <select name="unit2" id="unit2" required></select>
+    </label>
+  </div>
+
+  <button type="submit">送出表單</button>
+</form>
+
+<div id="message"></div>
+
+<!-- 工作人員下載 -->
+<div id="staffSection">
+  <h3>工作人員專用下載</h3>
+  <button id="downloadBtn">下載 Excel (需密碼)</button>
+</div>
+
+<script>
+// 修正：使用您提供的正確 ID
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycby03UhJUm5Lsd0LfqR9WSgn3M2FxtjGJL6LeQrgK-s0cX6sDnk-1FhFucDCz_ZkyzuYcg/exec";
+
+// 醫院與對應單位
+const hospitals = {
+  "醫院A": ["單位A1", "單位A2", "單位A3"],
+  "醫院B": ["單位B1", "單位B2"],
+  "醫院C": ["單位C1", "單位C2", "單位C3", "單位C4"],
+  "醫院D": ["單位D1"]
+};
+
+// 初始化醫院選單
+function populateHospitals() {
+  ["hospital1","hospital2"].forEach(id=>{
+    const select = document.getElementById(id);
+    select.innerHTML = '<option value="">請選擇醫院</option>';
+    for(let h in hospitals){
+      const opt = document.createElement('option');
+      opt.value = h; opt.textContent = h;
+      select.appendChild(opt);
+    }
+  });
+}
+
+// 根據選擇醫院更新單位
+function updateUnits(hospitalId, unitId){
+  const hospital = document.getElementById(hospitalId);
+  const unit = document.getElementById(unitId);
+
+  function setOptions(){
+    unit.innerHTML = '';
+    const h = hospital.value;
+    if(!h){
+      unit.innerHTML='<option value="">請先選醫院</option>';
+      return;
+    }
+    hospitals[h].forEach(u=>{
+      const opt = document.createElement('option');
+      opt.value = u; opt.textContent = u;
+      unit.appendChild(opt);
+    });
+  }
+
+  hospital.addEventListener('change', setOptions);
+  setOptions(); // 初始化
+}
+
+// 送出表單
+document.getElementById('volunteerForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const form = this;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  // 防止重複提交
+  submitBtn.disabled = true;
+  submitBtn.textContent = '提交中...';
+  
+  const data = Object.fromEntries(new FormData(this).entries());
+  
+  try{
+    const res = await fetch(WEBAPP_URL, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {"Content-Type":"application/json"}
+    });
+    const result = await res.json();
+    
+    if(result.status === "success" || result.result === "success"){
+      document.getElementById('message').textContent = "資料送出成功！";
+      document.getElementById('message').style.color = "green";
+      form.reset();
+      // 重置單位選單
+      document.getElementById('unit1').innerHTML='<option value="">請先選醫院</option>';
+      document.getElementById('unit2').innerHTML='<option value="">請先選醫院</option>';
+    } else {
+      document.getElementById('message').textContent = "送出失敗：" + (result.message||"未知錯誤");
+      document.getElementById('message').style.color = "red";
+    }
+  } catch(err){
+    document.getElementById('message').textContent = "送出失敗：" + err.message;
+    document.getElementById('message').style.color = "red";
+    console.error("提交錯誤:", err);
+  } finally {
+    // 恢復按鈕狀態
+    submitBtn.disabled = false;
+    submitBtn.textContent = '送出表單';
+  }
+});
+
+// 工作人員下載
+document.getElementById('downloadBtn').addEventListener('click', function(){
+  const pwd = prompt("請輸入工作人員密碼：");
+  if(!pwd) return;
+  const url = WEBAPP_URL + "?password=" + encodeURIComponent(pwd) + "&action=download";
+  window.open(url,"_blank");
+});
+
+// 初始化
+populateHospitals();
+updateUnits('hospital1','unit1');
+updateUnits('hospital2','unit2');
+</script>
+
+</body>
+</html>
