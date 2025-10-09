@@ -3,17 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>學生志願填寫表單</title>
+<title>學生醫院志願填寫</title>
 <style>
-body { font-family: Arial; margin: 20px; }
-label { display: block; margin-top: 10px; }
-select, input { width: 300px; padding: 5px; margin-top: 5px; }
-.section { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
-button { padding: 10px 20px; margin-top: 10px; }
-#message { margin-top: 10px; padding: 10px; border-radius: 5px; }
-.success { color: green; background: #f0fff0; border: 1px solid green; }
-.error { color: red; background: #fff0f0; border: 1px solid red; }
-.info { color: blue; background: #f0f8ff; border: 1px solid blue; }
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  label { display: block; margin-top: 10px; }
+  select, input { width: 300px; padding: 5px; margin-top: 5px; }
+  .section { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+  button { padding: 10px 20px; margin-top: 10px; }
+  #message { margin-top: 10px; color: green; }
 </style>
 </head>
 <body>
@@ -21,7 +18,6 @@ button { padding: 10px 20px; margin-top: 10px; }
 <h2>學生醫院志願填寫表單</h2>
 
 <form id="volunteerForm">
-  <!-- 表單內容保持不變 -->
   <div class="section">
     <label>姓名: <input type="text" name="name" required></label>
     <label>學號: <input type="text" name="studentId" required></label>
@@ -46,28 +42,39 @@ button { padding: 10px 20px; margin-top: 10px; }
   <div class="section">
     <h3>志願填寫</h3>
     <label>志願一醫院:
-      <select name="hospital1" id="hospital1" required></select>
+      <select name="hospital1" id="hospital1" required>
+        <option value="">請選擇醫院</option>
+      </select>
     </label>
     <label>志願一單位:
-      <select name="unit1" id="unit1" required></select>
+      <select name="unit1" id="unit1" required>
+        <option value="">請先選醫院</option>
+      </select>
     </label>
+
     <label>志願二醫院:
-      <select name="hospital2" id="hospital2" required></select>
+      <select name="hospital2" id="hospital2" required>
+        <option value="">請選擇醫院</option>
+      </select>
     </label>
     <label>志願二單位:
-      <select name="unit2" id="unit2" required></select>
+      <select name="unit2" id="unit2" required>
+        <option value="">請先選醫院</option>
+      </select>
     </label>
   </div>
 
   <button type="submit">送出表單</button>
 </form>
 
-<div id="message" class="info">請填寫表單資料</div>
+<div id="message"></div>
 
+<hr>
+<h3>工作人員專用下載區</h3>
+<button id="downloadBtn">下載所有學生資料 Excel</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyn1rGnMaezs1QAJ5dVQFkDNnO-LxGR_PZjl5EZNqYFDhu_weB6hnGoSCxStS5ISVnKWQ/exec";
-
-// 醫院與對應單位
 const hospitals = {
   "醫院A": ["單位A1", "單位A2", "單位A3"],
   "醫院B": ["單位B1", "單位B2"],
@@ -75,103 +82,88 @@ const hospitals = {
   "醫院D": ["單位D1"]
 };
 
-function showMessage(message, type = 'info') {
-  const messageDiv = document.getElementById('message');
-  messageDiv.textContent = message;
-  messageDiv.className = type;
-}
+// 暫存學生資料
+let allData = [];
 
-// 初始化醫院選單
+// 設定工作人員密碼
+const STAFF_PASSWORD = "staff123"; // 可以自行修改
+
+// 生成醫院選項
 function populateHospitals() {
-  ["hospital1","hospital2"].forEach(id=>{
-    const select = document.getElementById(id);
-    select.innerHTML = '<option value="">請選擇醫院</option>';
-    for(let h in hospitals){
-      const opt = document.createElement('option');
-      opt.value = h; opt.textContent = h;
-      select.appendChild(opt);
+  const hospitalSelects = [document.getElementById('hospital1'), document.getElementById('hospital2')];
+  hospitalSelects.forEach(select => {
+    for (let h in hospitals) {
+      let option = document.createElement('option');
+      option.value = h;
+      option.textContent = h;
+      select.appendChild(option);
     }
   });
 }
 
-// 根據選擇醫院更新單位
-function updateUnits(hospitalId, unitId){
-  const hospital = document.getElementById(hospitalId);
-  const unit = document.getElementById(unitId);
+// 根據醫院更新單位選項
+function updateUnits(hospitalSelectId, unitSelectId) {
+  const hospitalSelect = document.getElementById(hospitalSelectId);
+  const unitSelect = document.getElementById(unitSelectId);
 
-  function setOptions(){
-    unit.innerHTML = '';
-    const h = hospital.value;
-    if(!h){
-      unit.innerHTML='<option value="">請先選醫院</option>';
+  function setUnits() {
+    unitSelect.innerHTML = '';
+    const selectedHospital = hospitalSelect.value;
+    if (!selectedHospital) {
+      let option = document.createElement('option');
+      option.textContent = '請先選醫院';
+      option.value = '';
+      unitSelect.appendChild(option);
       return;
     }
-    hospitals[h].forEach(u=>{
-      const opt = document.createElement('option');
-      opt.value = u; opt.textContent = u;
-      unit.appendChild(opt);
+    hospitals[selectedHospital].forEach(unit => {
+      let option = document.createElement('option');
+      option.value = unit;
+      option.textContent = unit;
+      unitSelect.appendChild(option);
     });
   }
 
-  hospital.addEventListener('change', setOptions);
-  setOptions();
+  hospitalSelect.addEventListener('change', setUnits);
+  setUnits(); // 頁面載入時初始化單位
 }
 
-// 使用傳統表單提交 JSON 資料
+// 表單送出
 document.getElementById('volunteerForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  
-  const form = this;
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const data = Object.fromEntries(new FormData(form).entries());
-  
-  submitBtn.disabled = true;
-  submitBtn.textContent = '提交中...';
-  showMessage('資料提交中...', 'info');
-  
-  // 建立隱藏表單來提交 JSON
-  const hiddenForm = document.createElement('form');
-  hiddenForm.method = 'POST';
-  hiddenForm.action = WEBAPP_URL;
-  hiddenForm.target = 'hiddenFrame';
-  hiddenForm.style.display = 'none';
-  
-  const dataInput = document.createElement('input');
-  dataInput.name = 'data';
-  dataInput.value = JSON.stringify(data);
-  hiddenForm.appendChild(dataInput);
-  
-  document.body.appendChild(hiddenForm);
-  
-  // 建立隱藏 iframe 來接收回應
-  const iframe = document.createElement('iframe');
-  iframe.name = 'hiddenFrame';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  
-  iframe.onload = function() {
-    // 提交完成後的處理
-    showMessage('✅ 表單提交成功！請檢查試算表。', 'success');
-    form.reset();
-    document.getElementById('unit1').innerHTML = '<option value="">請先選醫院</option>';
-    document.getElementById('unit2').innerHTML = '<option value="">請先選醫院</option>';
-    
-    submitBtn.disabled = false;
-    submitBtn.textContent = '送出表單';
-    
-    // 清理
-    document.body.removeChild(hiddenForm);
-    document.body.removeChild(iframe);
-  };
-  
-  hiddenForm.submit();
+  const formData = new FormData(this);
+  const data = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+  allData.push(data);
+  document.getElementById('message').textContent = `資料已送出，目前累計 ${allData.length} 筆`;
+  this.reset();
+  // 重置單位下拉
+  document.getElementById('unit1').innerHTML = '<option value="">請先選醫院</option>';
+  document.getElementById('unit2').innerHTML = '<option value="">請先選醫院</option>';
 });
 
-// 初始化
+// 工作人員下載 Excel（需密碼）
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  if (allData.length === 0) {
+    alert("目前沒有資料可以下載！");
+    return;
+  }
+  const password = prompt("請輸入工作人員密碼下載 Excel：");
+  if (password !== STAFF_PASSWORD) {
+    alert("密碼錯誤，無法下載！");
+    return;
+  }
+  const ws = XLSX.utils.json_to_sheet(allData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "志願資料");
+  XLSX.writeFile(wb, "所有學生志願資料.xlsx");
+});
+
 populateHospitals();
-updateUnits('hospital1','unit1');
-updateUnits('hospital2','unit2');
-showMessage('✅ 系統就緒，請填寫表單', 'success');
+updateUnits('hospital1', 'unit1');
+updateUnits('hospital2', 'unit2');
 </script>
 
 </body>
