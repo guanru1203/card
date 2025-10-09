@@ -3,14 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>學生醫院志願填寫</title>
+<title>學生志願填寫表單</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  label { display: block; margin-top: 10px; }
-  select, input { width: 300px; padding: 5px; margin-top: 5px; }
-  .section { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
-  button { padding: 10px 20px; margin-top: 10px; }
-  #message { margin-top: 10px; color: green; }
+body { font-family: Arial; margin: 20px; }
+label { display: block; margin-top: 10px; }
+select, input { width: 300px; padding: 5px; margin-top: 5px; }
+.section { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
+button { padding: 10px 20px; margin-top: 10px; }
+#message { margin-top: 10px; padding: 10px; border-radius: 5px; }
+.success { color: green; background: #f0fff0; border: 1px solid green; }
+.error { color: red; background: #fff0f0; border: 1px solid red; }
+.info { color: blue; background: #f0f8ff; border: 1px solid blue; }
 </style>
 </head>
 <body>
@@ -42,39 +45,30 @@
   <div class="section">
     <h3>志願填寫</h3>
     <label>志願一醫院:
-      <select name="hospital1" id="hospital1" required>
-        <option value="">請選擇醫院</option>
-      </select>
+      <select name="hospital1" id="hospital1" required></select>
     </label>
     <label>志願一單位:
-      <select name="unit1" id="unit1" required>
-        <option value="">請先選醫院</option>
-      </select>
+      <select name="unit1" id="unit1" required></select>
     </label>
 
     <label>志願二醫院:
-      <select name="hospital2" id="hospital2" required>
-        <option value="">請選擇醫院</option>
-      </select>
+      <select name="hospital2" id="hospital2" required></select>
     </label>
     <label>志願二單位:
-      <select name="unit2" id="unit2" required>
-        <option value="">請先選醫院</option>
-      </select>
+      <select name="unit2" id="unit2" required></select>
     </label>
   </div>
 
   <button type="submit">送出表單</button>
 </form>
 
-<div id="message"></div>
+<div id="message" class="info">請填寫表單資料</div>
 
-<hr>
-<h3>工作人員專用下載區</h3>
-<button id="downloadBtn">下載所有學生資料 Excel</button>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+// 您的 Web App URL
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyn1rGnMaezs1QAJ5dVQFkDNnO-LxGR_PZjl5EZNqYFDhu_weB6hnGoSCxStS5ISVnKWQ/exec";
+
+// 醫院與對應單位
 const hospitals = {
   "醫院A": ["單位A1", "單位A2", "單位A3"],
   "醫院B": ["單位B1", "單位B2"],
@@ -82,88 +76,137 @@ const hospitals = {
   "醫院D": ["單位D1"]
 };
 
-// 暫存學生資料
-let allData = [];
+function showMessage(message, type = 'info') {
+  const messageDiv = document.getElementById('message');
+  messageDiv.textContent = message;
+  messageDiv.className = type;
+}
 
-// 設定工作人員密碼
-const STAFF_PASSWORD = "staff123"; // 可以自行修改
-
-// 生成醫院選項
+// 初始化醫院選單
 function populateHospitals() {
-  const hospitalSelects = [document.getElementById('hospital1'), document.getElementById('hospital2')];
-  hospitalSelects.forEach(select => {
-    for (let h in hospitals) {
-      let option = document.createElement('option');
-      option.value = h;
-      option.textContent = h;
-      select.appendChild(option);
+  ["hospital1","hospital2"].forEach(id=>{
+    const select = document.getElementById(id);
+    select.innerHTML = '<option value="">請選擇醫院</option>';
+    for(let h in hospitals){
+      const opt = document.createElement('option');
+      opt.value = h; opt.textContent = h;
+      select.appendChild(opt);
     }
   });
 }
 
-// 根據醫院更新單位選項
-function updateUnits(hospitalSelectId, unitSelectId) {
-  const hospitalSelect = document.getElementById(hospitalSelectId);
-  const unitSelect = document.getElementById(unitSelectId);
+// 根據選擇醫院更新單位
+function updateUnits(hospitalId, unitId){
+  const hospital = document.getElementById(hospitalId);
+  const unit = document.getElementById(unitId);
 
-  function setUnits() {
-    unitSelect.innerHTML = '';
-    const selectedHospital = hospitalSelect.value;
-    if (!selectedHospital) {
-      let option = document.createElement('option');
-      option.textContent = '請先選醫院';
-      option.value = '';
-      unitSelect.appendChild(option);
+  function setOptions(){
+    unit.innerHTML = '';
+    const h = hospital.value;
+    if(!h){
+      unit.innerHTML='<option value="">請先選醫院</option>';
       return;
     }
-    hospitals[selectedHospital].forEach(unit => {
-      let option = document.createElement('option');
-      option.value = unit;
-      option.textContent = unit;
-      unitSelect.appendChild(option);
+    hospitals[h].forEach(u=>{
+      const opt = document.createElement('option');
+      opt.value = u; opt.textContent = u;
+      unit.appendChild(opt);
     });
   }
 
-  hospitalSelect.addEventListener('change', setUnits);
-  setUnits(); // 頁面載入時初始化單位
+  hospital.addEventListener('change', setOptions);
+  setOptions();
 }
 
-// 表單送出
+// 使用 Google Apps Script 推薦的提交方式
 document.getElementById('volunteerForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const formData = new FormData(this);
-  const data = {};
-  formData.forEach((value, key) => {
-    data[key] = value;
+  
+  const form = this;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = '提交中...';
+  showMessage('資料提交中...', 'info');
+  
+  console.log('準備提交資料:', data);
+  
+  // 方法1: 使用 Google Apps Script 推薦的方式 - 創建隱藏表單
+  const hiddenForm = document.createElement('form');
+  hiddenForm.method = 'POST';
+  hiddenForm.action = WEBAPP_URL;
+  hiddenForm.target = 'hiddenIframe';
+  hiddenForm.style.display = 'none';
+  
+  // 添加所有表單資料
+  Object.keys(data).forEach(key => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = data[key];
+    hiddenForm.appendChild(input);
   });
-  allData.push(data);
-  document.getElementById('message').textContent = `資料已送出，目前累計 ${allData.length} 筆`;
-  this.reset();
-  // 重置單位下拉
-  document.getElementById('unit1').innerHTML = '<option value="">請先選醫院</option>';
-  document.getElementById('unit2').innerHTML = '<option value="">請先選醫院</option>';
+  
+  // 創建隱藏 iframe 來接收回應
+  let iframe = document.getElementById('hiddenIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'hiddenIframe';
+    iframe.id = 'hiddenIframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  
+  // 監聽 iframe 載入完成
+    iframe.onload = function() {
+      try {
+        // 嘗試讀取 iframe 的內容
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const responseText = iframeDoc.body.innerText;
+        
+        console.log('伺服器回應:', responseText);
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch {
+          // 如果無法解析為 JSON，視為成功
+          result = { status: 'success', message: '提交成功' };
+        }
+        
+        if (result.status === 'success') {
+          showMessage('✅ ' + result.message, 'success');
+          form.reset();
+          document.getElementById('unit1').innerHTML = '<option value="">請先選醫院</option>';
+          document.getElementById('unit2').innerHTML = '<option value="">請先選醫院</option>';
+        } else {
+          showMessage('❌ ' + (result.message || '提交失敗'), 'error');
+        }
+      } catch (error) {
+        // 如果無法讀取 iframe 內容，仍視為成功（Google Apps Script 的限制）
+        console.log('無法讀取回應，但請求已發送');
+        showMessage('✅ 表單已提交！請檢查試算表。', 'success');
+        form.reset();
+        document.getElementById('unit1').innerHTML = '<option value="">請先選醫院</option>';
+        document.getElementById('unit2').innerHTML = '<option value="">請先選醫院</option>';
+      }
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送出表單';
+      document.body.removeChild(hiddenForm);
+    };
+    
+    document.body.appendChild(hiddenForm);
+    hiddenForm.submit();
 });
 
-// 工作人員下載 Excel（需密碼）
-document.getElementById('downloadBtn').addEventListener('click', function() {
-  if (allData.length === 0) {
-    alert("目前沒有資料可以下載！");
-    return;
-  }
-  const password = prompt("請輸入工作人員密碼下載 Excel：");
-  if (password !== STAFF_PASSWORD) {
-    alert("密碼錯誤，無法下載！");
-    return;
-  }
-  const ws = XLSX.utils.json_to_sheet(allData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "志願資料");
-  XLSX.writeFile(wb, "所有學生志願資料.xlsx");
-});
-
+// 初始化
 populateHospitals();
-updateUnits('hospital1', 'unit1');
-updateUnits('hospital2', 'unit2');
+updateUnits('hospital1','unit1');
+updateUnits('hospital2','unit2');
+showMessage('✅ 系統就緒，請填寫表單', 'success');
 </script>
 
 </body>
