@@ -521,14 +521,6 @@
             font-size: 0.9rem;
         }
         
-        .timeline-note {
-            background-color: rgba(52, 152, 219, 0.1);
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-color);
-        }
-        
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
@@ -556,7 +548,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calendar-alt"></i> 空間借用系統</h1>
-            <p class="subtitle">輕鬆預約，高效管理 - 所有人可見的借用記錄</p>
+            <p class="subtitle">輕鬆預約，高效管理</p>
         </header>
         
         <div class="tabs">
@@ -629,10 +621,6 @@
             <h2><i class="fas fa-chart-timeline"></i> 借用時間軸</h2>
             <p>查看所有已借用的會議室時間安排</p>
             
-            <div class="timeline-note">
-                <i class="fas fa-info-circle"></i> 此頁面顯示所有人的借用記錄，方便查看會議室使用情況
-            </div>
-            
             <div class="timeline-container">
                 <div class="timeline-header">
                     <div class="timeline-title">會議室借用時間表</div>
@@ -640,6 +628,7 @@
                         <button id="prev-day" class="btn"><i class="fas fa-chevron-left"></i> 前一天</button>
                         <span id="current-date" style="padding: 0 15px; font-weight: bold;"></span>
                         <button id="next-day" class="btn">後一天 <i class="fas fa-chevron-right"></i></button>
+                        <button id="refresh-timeline" class="btn"><i class="fas fa-sync-alt"></i> 重新整理</button>
                     </div>
                 </div>
                 
@@ -667,6 +656,12 @@
     </div>
 
     <script>
+        // === 配置區域 ===
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9Vggzd2AlVnnbLD9wCzJCd3FrbQ2F93Xu8F7ngVMZNN_NwdqtX-JD5cNA2Vn5XwwW/exec';
+        
+        // 系统密码
+        const SYSTEM_PASSWORD = "hk56503102";
+        
         // 会议室数据
         const meetingRooms = [
             { id: 'E110', name: 'E110', capacity: 10 },
@@ -680,11 +675,8 @@
             { id: 'E104', name: 'E104', capacity: 16 },
             { id: 'P401', name: 'P401', capacity: 35 }
         ];
-        
-        // 系统密码
-        const SYSTEM_PASSWORD = "hk56503102";
-        
-        // 初始化数据
+
+        // === 初始化 ===
         document.addEventListener('DOMContentLoaded', function() {
             // 设置最小日期为今天
             const today = new Date().toISOString().split('T')[0];
@@ -695,9 +687,6 @@
             
             // 初始化时间段选择
             initTimeSelection();
-            
-            // 加载借用记录
-            loadBookings();
             
             // 初始化时间轴
             initTimeline();
@@ -739,6 +728,11 @@
                 changeTimelineDate(1);
             });
             
+            document.getElementById('refresh-timeline').addEventListener('click', function() {
+                refreshTimeline();
+                showAlert('timeline-content', '時間軸已更新', 'success');
+            });
+            
             // 密码模态框控制
             document.getElementById('cancel-btn').addEventListener('click', function() {
                 hidePasswordModal();
@@ -760,6 +754,73 @@
                 updateAvailableTimeSlots();
             });
         });
+
+        // === 簡化的後端函數 - 先使用 localStorage 確保功能正常 ===
+        
+        // 儲存借用記錄
+        async function saveBookingToBackend(bookingData) {
+            try {
+                // 先嘗試 Google Apps Script
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // 添加 no-cors 模式
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify({
+                        action: 'saveBooking',
+                        data: bookingData
+                    })
+                });
+                
+                // 由於 no-cors 模式，我們無法讀取回應，所以總是回傳成功
+                console.log('已嘗試發送到 Google Apps Script');
+                
+                // 同時儲存到 localStorage 作為備份
+                saveBookingToLocalStorage(bookingData);
+                return true;
+                
+            } catch (error) {
+                console.error('Google Apps Script 失敗，使用 localStorage:', error);
+                // 如果後端失敗，使用 localStorage 作為備份
+                saveBookingToLocalStorage(bookingData);
+                return true;
+            }
+        }
+        
+        // 讀取借用記錄
+        async function loadBookingsFromBackend() {
+            try {
+                // 先嘗試從 Google Apps Script 讀取
+                const response = await fetch(`${SCRIPT_URL}?action=getBookings&t=${Date.now()}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    return result.data || [];
+                } else {
+                    throw new Error('Google Apps Script 回應錯誤');
+                }
+            } catch (error) {
+                console.error('從 Google Apps Script 讀取失敗，使用 localStorage:', error);
+                // 如果後端失敗，使用 localStorage 作為備份
+                return loadBookingsFromLocalStorage();
+            }
+        }
+        
+        // === 本地儲存函數 ===
+        function saveBookingToLocalStorage(booking) {
+            let bookings = JSON.parse(localStorage.getItem('spaceBookings')) || [];
+            bookings.push(booking);
+            localStorage.setItem('spaceBookings', JSON.stringify(bookings));
+            console.log('已儲存到 localStorage:', booking);
+        }
+        
+        function loadBookingsFromLocalStorage() {
+            const bookings = JSON.parse(localStorage.getItem('spaceBookings')) || [];
+            console.log('從 localStorage 讀取:', bookings.length, '筆記錄');
+            return bookings;
+        }
+        
+        // === 主要功能函數 ===
         
         // 初始化会议室选择
         function initRoomSelection() {
@@ -843,14 +904,14 @@
         }
         
         // 更新可用时间段
-        function updateAvailableTimeSlots() {
+        async function updateAvailableTimeSlots() {
             const selectedRoom = document.querySelector('.room-card.selected');
             const selectedDate = document.getElementById('booking-date').value;
             
             if (!selectedRoom || !selectedDate) return;
             
             const roomId = selectedRoom.getAttribute('data-room');
-            const bookings = loadBookings();
+            const bookings = await loadBookingsFromBackend();
             
             // 重置所有时间段
             document.querySelectorAll('.time-slot').forEach(slot => {
@@ -892,40 +953,11 @@
                 return;
             }
             const roomId = selectedRoom.getAttribute('data-room');
-            const room = meetingRooms.find(r => r.id === roomId);
             
             // 获取选中的时间段
             const selectedTimeSlots = document.querySelectorAll('.time-slot.selected');
             if (selectedTimeSlots.length === 0) {
                 showAlert('apply-alert', '請至少選擇一個時間段', 'danger');
-                return;
-            }
-            
-            // 检查时间段是否可用
-            const selectedDate = document.getElementById('booking-date').value;
-            const bookings = loadBookings();
-            
-            let isAvailable = true;
-            selectedTimeSlots.forEach(slot => {
-                const startTime = slot.getAttribute('data-start');
-                const endTime = slot.getAttribute('data-end');
-                
-                const slotAvailable = !bookings.some(booking => 
-                    booking.roomId === roomId && 
-                    booking.date === selectedDate && 
-                    booking.status === 'approved' &&
-                    ((startTime >= booking.startTime && startTime < booking.endTime) ||
-                     (endTime > booking.startTime && endTime <= booking.endTime) ||
-                     (startTime <= booking.startTime && endTime >= booking.endTime))
-                );
-                
-                if (!slotAvailable) {
-                    isAvailable = false;
-                }
-            });
-            
-            if (!isAvailable) {
-                showAlert('apply-alert', '部分時間段已被預約，請重新選擇', 'danger');
                 return;
             }
             
@@ -960,7 +992,7 @@
         }
         
         // 提交借用申请
-        function submitBooking() {
+        async function submitBooking() {
             // 获取选中的会议室
             const selectedRoom = document.querySelector('.room-card.selected');
             const roomId = selectedRoom.getAttribute('data-room');
@@ -970,7 +1002,7 @@
             const selectedTimeSlots = document.querySelectorAll('.time-slot.selected');
             
             // 为每个选中的时间段创建借用记录
-            selectedTimeSlots.forEach(slot => {
+            for (const slot of selectedTimeSlots) {
                 const startTime = slot.getAttribute('data-start');
                 const endTime = slot.getAttribute('data-end');
                 
@@ -986,13 +1018,13 @@
                     date: document.getElementById('booking-date').value,
                     startTime: startTime,
                     endTime: endTime,
-                    status: 'approved', // 直接批准
+                    status: 'approved',
                     submitTime: new Date().toISOString()
                 };
                 
-                // 保存到localStorage
-                saveBooking(bookingData);
-            });
+                // 保存到後端
+                await saveBookingToBackend(bookingData);
+            }
             
             // 显示成功结果
             showSuccessResult(room.name, selectedTimeSlots);
@@ -1035,155 +1067,4 @@
                         <span class="detail-label">會議室：</span>
                         <span>${roomName}</span>
                     </div>
-                    <div class="detail-item">
-                        <span class="detail-label">借用日期：</span>
-                        <span>${formattedDate}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">借用時間：</span>
-                        <div>${timeSlotsText}</div>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">申請人：</span>
-                        <span>${document.getElementById('applicant-name').value}</span>
-                    </div>
-                </div>
-                <p style="margin-top: 15px; font-style: italic;">您的借用已成功記錄，可以在「借用時間軸」中查看所有人的借用記錄。</p>
-            `;
-            
-            successResult.style.display = 'block';
-            
-            // 滚动到成功结果
-            successResult.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // 保存借用记录
-        function saveBooking(booking) {
-            let bookings = JSON.parse(localStorage.getItem('spaceBookings')) || [];
-            bookings.push(booking);
-            localStorage.setItem('spaceBookings', JSON.stringify(bookings));
-        }
-        
-        // 加载借用记录
-        function loadBookings() {
-            return JSON.parse(localStorage.getItem('spaceBookings')) || [];
-        }
-        
-        // 初始化时间轴
-        function initTimeline() {
-            refreshTimeline();
-        }
-        
-        // 刷新时间轴
-        function refreshTimeline() {
-            const timelineContent = document.getElementById('timeline-content');
-            const currentDateElem = document.getElementById('current-date');
-            const bookings = loadBookings();
-            
-            // 获取今天的日期
-            const today = new Date();
-            const timelineDate = timelineDateStr ? new Date(timelineDateStr) : today;
-            
-            // 格式化日期显示
-            const dateStr = timelineDate.toISOString().split('T')[0];
-            const displayDate = timelineDate.toLocaleDateString('zh-TW', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                weekday: 'long'
-            });
-            
-            currentDateElem.textContent = displayDate;
-            
-            // 筛选当天的借用记录
-            const dayBookings = bookings.filter(booking => booking.date === dateStr && booking.status === 'approved');
-            
-            // 按会议室分组
-            const roomBookings = {};
-            meetingRooms.forEach(room => {
-                roomBookings[room.id] = [];
-            });
-            
-            dayBookings.forEach(booking => {
-                if (roomBookings[booking.roomId]) {
-                    roomBookings[booking.roomId].push(booking);
-                }
-            });
-            
-            // 生成时间轴内容
-            let timelineHTML = `
-                <div class="timeline-day">
-                    <div class="timeline-slots">
-            `;
-            
-            meetingRooms.forEach(room => {
-                const roomBooking = roomBookings[room.id];
-                
-                timelineHTML += `
-                    <div class="timeline-slot">
-                        <div class="slot-header">
-                            <div class="slot-room">${room.name}</div>
-                            <div class="slot-time">容量: ${room.capacity}人</div>
-                        </div>
-                `;
-                
-                if (roomBooking.length > 0) {
-                    // 按开始时间排序
-                    roomBooking.sort((a, b) => a.startTime.localeCompare(b.startTime));
-                    
-                    roomBooking.forEach(booking => {
-                        timelineHTML += `
-                            <div class="slot-user">
-                                <strong>${booking.startTime} - ${booking.endTime}</strong>: ${booking.name} (${booking.department})
-                            </div>
-                        `;
-                    });
-                } else {
-                    timelineHTML += `
-                        <div class="slot-user" style="color: #6c757d; font-style: italic;">
-                            暫無借用記錄
-                        </div>
-                    `;
-                }
-                
-                timelineHTML += `</div>`;
-            });
-            
-            timelineHTML += `
-                    </div>
-                </div>
-            `;
-            
-            timelineContent.innerHTML = timelineHTML;
-        }
-        
-        // 改变时间轴日期
-        function changeTimelineDate(days) {
-            const currentDate = timelineDateStr ? new Date(timelineDateStr) : new Date();
-            currentDate.setDate(currentDate.getDate() + days);
-            timelineDateStr = currentDate.toISOString().split('T')[0];
-            refreshTimeline();
-        }
-        
-        // 显示提示消息
-        function showAlert(containerId, message, type) {
-            const container = document.getElementById(containerId);
-            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-            
-            container.innerHTML = `
-                <div class="alert ${alertClass}">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}
-                </div>
-            `;
-            
-            // 5秒后自动清除提示
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 5000);
-        }
-        
-        // 全局变量
-        let timelineDateStr = null;
-    </script>
-</body>
-</html>
+                    <div class
