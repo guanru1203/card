@@ -521,6 +521,14 @@
             font-size: 0.9rem;
         }
         
+        .timeline-note {
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
@@ -548,7 +556,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calendar-alt"></i> 空間借用系統</h1>
-            <p class="subtitle">輕鬆預約，高效管理</p>
+            <p class="subtitle">輕鬆預約，高效管理 - 所有人可見的借用記錄</p>
         </header>
         
         <div class="tabs">
@@ -620,6 +628,10 @@
         <section id="timeline" class="content-section">
             <h2><i class="fas fa-chart-timeline"></i> 借用時間軸</h2>
             <p>查看所有已借用的會議室時間安排</p>
+            
+            <div class="timeline-note">
+                <i class="fas fa-info-circle"></i> 此頁面顯示所有人的借用記錄，方便查看會議室使用情況
+            </div>
             
             <div class="timeline-container">
                 <div class="timeline-header">
@@ -1036,7 +1048,7 @@
                         <span>${document.getElementById('applicant-name').value}</span>
                     </div>
                 </div>
-                <p style="margin-top: 15px; font-style: italic;">您的借用已成功記錄，可以在「借用時間軸」中查看。</p>
+                <p style="margin-top: 15px; font-style: italic;">您的借用已成功記錄，可以在「借用時間軸」中查看所有人的借用記錄。</p>
             `;
             
             successResult.style.display = 'block';
