@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空間借用系統</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: bottom;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        .tab i {
+            margin-right: 8px;
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .result-container {
+            margin-top: 20px;
+        }
+        
+        .booking-card {
+            background-color: var(--light-color);
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .booking-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .booking-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .booking-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .status-approved {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: #f39c12;
+        }
+        
+        .status-rejected {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        
+        .detail-item {
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .no-result {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-color);
+        }
+        
+        .no-result i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success-color);
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger-color);
+            color: #721c24;
+        }
+        
+        /* 时间轴样式 */
+        .timeline-container {
+            margin-top: 30px;
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .timeline-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            background-color: var(--light-color);
+            border-radius: 6px;
+            color: var(--primary-color);
+            display: inline-block;
+        }
+        
+        .timeline-day {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .timeline-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .timeline-slot {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+        
+        .timeline-slot:hover {
+            transform: translateY(-3px);
+        }
+        
+        .slot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .slot-room {
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .slot-time {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .slot-user {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .room-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+        
+        .room-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .room-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .room-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .room-capacity {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .time-slot {
+            padding: 10px 15px;
+            background-color: var(--light-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .time-slot:hover {
+            background-color: #e2e6ea;
+        }
+        
+        .time-slot.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .time-slot.unavailable {
+            background-color: #f8d7da;
+            color: #721c24;
+            cursor: not-allowed;
+        }
+        
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .password-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        .success-result {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 5px solid var(--success-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .success-title {
+            font-size: 1.5rem;
+            color: var(--success-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .selected-times {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .selected-times-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .selected-times-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .selected-time-item {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .room-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .timeline-slots {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-slots {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt"></i> 空間借用系統</h1>
+            <p class="subtitle">輕鬆預約，高效管理</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="apply"><i class="fas fa-pen-to-square"></i> 借用申請</div>
+            <div class="tab" data-tab="timeline"><i class="fas fa-chart-timeline"></i> 借用時間軸</div>
+        </div>
+        
+        <section id="apply" class="content-section active">
+            <h2><i class="fas fa-pen-to-square"></i> 空間借用申請</h2>
+            <p>請填寫以下表格申請借用空間</p>
+            
+            <div id="apply-alert"></div>
+            
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="applicant-name"><i class="fas fa-user"></i> 申請人姓名 *</label>
+                    <input type="text" id="applicant-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="applicant-department"><i class="fas fa-building"></i> 所屬單位 *</label>
+                    <input type="text" id="applicant-department" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="applicant-phone"><i class="fas fa-phone"></i> 聯絡電話 *</label>
+                    <input type="tel" id="applicant-phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="applicant-email"><i class="fas fa-envelope"></i> 電子郵件 *</label>
+                    <input type="email" id="applicant-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-door-open"></i> 選擇會議室 *</label>
+                    <div class="room-grid" id="room-selection">
+                        <!-- 会议室选项将通过JS动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-date"><i class="fas fa-calendar-day"></i> 借用日期 *</label>
+                    <input type="date" id="booking-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> 選擇時間段 * (可多選)</label>
+                    <div class="time-slots" id="time-selection">
+                        <!-- 时间段选项将通过JS动态生成 -->
+                    </div>
+                </div>
+                
+                <div id="selected-times-display" class="selected-times" style="display: none;">
+                    <div class="selected-times-title">已選擇的時間段：</div>
+                    <div class="selected-times-list" id="selected-times-list">
+                        <!-- 已选择的时间段将在这里显示 -->
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> 提交申請</button>
+            </form>
+            
+            <div id="success-result" class="success-result" style="display: none;">
+                <!-- 成功结果将在这里显示 -->
+            </div>
+        </section>
+        
+        <section id="timeline" class="content-section">
+            <h2><i class="fas fa-chart-timeline"></i> 借用時間軸</h2>
+            <p>查看所有已借用的會議室時間安排</p>
+            
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <div class="timeline-title">會議室借用時間表</div>
+                    <div class="timeline-controls">
+                        <button id="prev-day" class="btn"><i class="fas fa-chevron-left"></i> 前一天</button>
+                        <span id="current-date" style="padding: 0 15px; font-weight: bold;"></span>
+                        <button id="next-day" class="btn">後一天 <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div id="timeline-content">
+                    <!-- 时间轴内容将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 密码验证模态框 -->
+    <div class="password-modal" id="password-modal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fas fa-lock"></i> 密碼驗證</h3>
+            <p>請輸入系統密碼以完成借用申請</p>
+            <div class="form-group">
+                <input type="password" id="password-input" placeholder="請輸入密碼">
+            </div>
+            <div id="password-alert"></div>
+            <div class="modal-actions">
+                <button id="cancel-btn" class="btn">取消</button>
+                <button id="confirm-btn" class="btn btn-success">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 会议室数据
+        const meetingRooms = [
+            { id: 'E110', name: 'E110', capacity: 10 },
+            { id: 'E202', name: 'E202', capacity: 15 },
+            { id: 'E10201', name: 'E10201', capacity: 20 },
+            { id: 'E10202', name: 'E10202', capacity: 25 },
+            { id: 'E101', name: 'E101', capacity: 30 },
+            { id: 'E105', name: 'E105', capacity: 12 },
+            { id: 'E313', name: 'E313', capacity: 18 },
+            { id: 'E301', name: 'E301', capacity: 22 },
+            { id: 'E104', name: 'E104', capacity: 16 },
+            { id: 'P401', name: 'P401', capacity: 35 }
+        ];
+        
+        // 系统密码
+        const SYSTEM_PASSWORD = "hk56503102";
+        
+        // 初始化数据
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置最小日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('booking-date').min = today;
+            
+            // 初始化会议室选择
+            initRoomSelection();
+            
+            // 初始化时间段选择
+            initTimeSelection();
+            
+            // 加载借用记录
+            loadBookings();
+            
+            // 初始化时间轴
+            initTimeline();
+            
+            // 切换标签页
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新活跃标签
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示对应内容
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // 如果是时间轴标签，刷新时间轴
+                    if (tabId === 'timeline') {
+                        refreshTimeline();
+                    }
+                });
+            });
+            
+            // 处理申请表单提交
+            document.getElementById('booking-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showPasswordModal();
+            });
+            
+            // 时间轴控制
+            document.getElementById('prev-day').addEventListener('click', function() {
+                changeTimelineDate(-1);
+            });
+            
+            document.getElementById('next-day').addEventListener('click', function() {
+                changeTimelineDate(1);
+            });
+            
+            // 密码模态框控制
+            document.getElementById('cancel-btn').addEventListener('click', function() {
+                hidePasswordModal();
+            });
+            
+            document.getElementById('confirm-btn').addEventListener('click', function() {
+                verifyPassword();
+            });
+            
+            // 按Enter键确认密码
+            document.getElementById('password-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
+            
+            // 日期变化时更新可用时间段
+            document.getElementById('booking-date').addEventListener('change', function() {
+                updateAvailableTimeSlots();
+            });
+        });
+        
+        // 初始化会议室选择
+        function initRoomSelection() {
+            const roomSelection = document.getElementById('room-selection');
+            roomSelection.innerHTML = '';
+            
+            meetingRooms.forEach(room => {
+                const roomCard = document.createElement('div');
+                roomCard.className = 'room-card';
+                roomCard.setAttribute('data-room', room.id);
+                roomCard.innerHTML = `
+                    <div class="room-icon">
+                        <i class="fas fa-door-closed"></i>
+                    </div>
+                    <div class="room-name">${room.name}</div>
+                    <div class="room-capacity">容量: ${room.capacity}人</div>
+                `;
+                
+                roomCard.addEventListener('click', function() {
+                    document.querySelectorAll('.room-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    updateAvailableTimeSlots();
+                });
+                
+                roomSelection.appendChild(roomCard);
+            });
+        }
+        
+        // 初始化时间段选择
+        function initTimeSelection() {
+            const timeSelection = document.getElementById('time-selection');
+            timeSelection.innerHTML = '';
+            
+            // 生成从8:00到21:00的时间段（每小时一个）
+            for (let hour = 8; hour <= 21; hour++) {
+                const startTime = `${hour.toString().padStart(2, '0')}:00`;
+                const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
+                const slotId = `slot-${hour}`;
+                
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.setAttribute('data-slot', slotId);
+                timeSlot.setAttribute('data-start', startTime);
+                timeSlot.setAttribute('data-end', endTime);
+                timeSlot.textContent = `${startTime} - ${endTime}`;
+                
+                timeSlot.addEventListener('click', function() {
+                    if (!this.classList.contains('unavailable')) {
+                        this.classList.toggle('selected');
+                        updateSelectedTimesDisplay();
+                    }
+                });
+                
+                timeSelection.appendChild(timeSlot);
+            }
+        }
+        
+        // 更新已选择的时间段显示
+        function updateSelectedTimesDisplay() {
+            const selectedTimeSlots = document.querySelectorAll('.time-slot.selected');
+            const selectedTimesList = document.getElementById('selected-times-list');
+            const selectedTimesDisplay = document.getElementById('selected-times-display');
+            
+            selectedTimesList.innerHTML = '';
+            
+            if (selectedTimeSlots.length > 0) {
+                selectedTimesDisplay.style.display = 'block';
+                
+                selectedTimeSlots.forEach(slot => {
+                    const timeText = slot.textContent;
+                    const timeItem = document.createElement('div');
+                    timeItem.className = 'selected-time-item';
+                    timeItem.textContent = timeText;
+                    selectedTimesList.appendChild(timeItem);
+                });
+            } else {
+                selectedTimesDisplay.style.display = 'none';
+            }
+        }
+        
+        // 更新可用时间段
+        function updateAvailableTimeSlots() {
+            const selectedRoom = document.querySelector('.room-card.selected');
+            const selectedDate = document.getElementById('booking-date').value;
+            
+            if (!selectedRoom || !selectedDate) return;
+            
+            const roomId = selectedRoom.getAttribute('data-room');
+            const bookings = loadBookings();
+            
+            // 重置所有时间段
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('unavailable');
+                slot.classList.remove('selected');
+            });
+            
+            // 标记已被占用的时间段
+            bookings.forEach(booking => {
+                if (booking.roomId === roomId && booking.date === selectedDate && booking.status === 'approved') {
+                    const startHour = parseInt(booking.startTime.split(':')[0]);
+                    const endHour = parseInt(booking.endTime.split(':')[0]);
+                    
+                    for (let hour = startHour; hour < endHour; hour++) {
+                        const slot = document.querySelector(`.time-slot[data-slot="slot-${hour}"]`);
+                        if (slot) {
+                            slot.classList.add('unavailable');
+                        }
+                    }
+                }
+            });
+            
+            updateSelectedTimesDisplay();
+        }
+        
+        // 生成唯一申请编号
+        function generateBookingId() {
+            const timestamp = new Date().getTime().toString();
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `BK${timestamp}${random}`;
+        }
+        
+        // 显示密码模态框
+        function showPasswordModal() {
+            // 获取选中的会议室
+            const selectedRoom = document.querySelector('.room-card.selected');
+            if (!selectedRoom) {
+                showAlert('apply-alert', '請選擇會議室', 'danger');
+                return;
+            }
+            const roomId = selectedRoom.getAttribute('data-room');
+            const room = meetingRooms.find(r => r.id === roomId);
+            
+            // 获取选中的时间段
+            const selectedTimeSlots = document.querySelectorAll('.time-slot.selected');
+            if (selectedTimeSlots.length === 0) {
+                showAlert('apply-alert', '請至少選擇一個時間段', 'danger');
+                return;
+            }
+            
+            // 检查时间段是否可用
+            const selectedDate = document.getElementById('booking-date').value;
+            const bookings = loadBookings();
+            
+            let isAvailable = true;
+            selectedTimeSlots.forEach(slot => {
+                const startTime = slot.getAttribute('data-start');
+                const endTime = slot.getAttribute('data-end');
+                
+                const slotAvailable = !bookings.some(booking => 
+                    booking.roomId === roomId && 
+                    booking.date === selectedDate && 
+                    booking.status === 'approved' &&
+                    ((startTime >= booking.startTime && startTime < booking.endTime) ||
+                     (endTime > booking.startTime && endTime <= booking.endTime) ||
+                     (startTime <= booking.startTime && endTime >= booking.endTime))
+                );
+                
+                if (!slotAvailable) {
+                    isAvailable = false;
+                }
+            });
+            
+            if (!isAvailable) {
+                showAlert('apply-alert', '部分時間段已被預約，請重新選擇', 'danger');
+                return;
+            }
+            
+            // 显示密码模态框
+            document.getElementById('password-modal').classList.add('active');
+            document.getElementById('password-input').focus();
+        }
+        
+        // 隐藏密码模态框
+        function hidePasswordModal() {
+            document.getElementById('password-modal').classList.remove('active');
+            document.getElementById('password-input').value = '';
+            document.getElementById('password-alert').innerHTML = '';
+        }
+        
+        // 验证密码
+        function verifyPassword() {
+            const password = document.getElementById('password-input').value;
+            
+            if (password === SYSTEM_PASSWORD) {
+                hidePasswordModal();
+                submitBooking();
+            } else {
+                document.getElementById('password-alert').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> 密碼錯誤，請重新輸入
+                    </div>
+                `;
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-input').focus();
+            }
+        }
+        
+        // 提交借用申请
+        function submitBooking() {
+            // 获取选中的会议室
+            const selectedRoom = document.querySelector('.room-card.selected');
+            const roomId = selectedRoom.getAttribute('data-room');
+            const room = meetingRooms.find(r => r.id === roomId);
+            
+            // 获取选中的时间段
+            const selectedTimeSlots = document.querySelectorAll('.time-slot.selected');
+            
+            // 为每个选中的时间段创建借用记录
+            selectedTimeSlots.forEach(slot => {
+                const startTime = slot.getAttribute('data-start');
+                const endTime = slot.getAttribute('data-end');
+                
+                // 获取表单数据
+                const bookingData = {
+                    id: generateBookingId(),
+                    name: document.getElementById('applicant-name').value,
+                    department: document.getElementById('applicant-department').value,
+                    phone: document.getElementById('applicant-phone').value,
+                    email: document.getElementById('applicant-email').value,
+                    roomId: roomId,
+                    roomName: room.name,
+                    date: document.getElementById('booking-date').value,
+                    startTime: startTime,
+                    endTime: endTime,
+                    status: 'approved', // 直接批准
+                    submitTime: new Date().toISOString()
+                };
+                
+                // 保存到localStorage
+                saveBooking(bookingData);
+            });
+            
+            // 显示成功结果
+            showSuccessResult(room.name, selectedTimeSlots);
+            
+            // 重置表单
+            document.getElementById('booking-form').reset();
+            document.querySelectorAll('.room-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // 隐藏已选择的时间段显示
+            document.getElementById('selected-times-display').style.display = 'none';
+            
+            // 刷新时间轴
+            refreshTimeline();
+        }
+        
+        // 显示成功结果
+        function showSuccessResult(roomName, selectedTimeSlots) {
+            const successResult = document.getElementById('success-result');
+            const selectedDate = document.getElementById('booking-date').value;
+            const formattedDate = new Date(selectedDate).toLocaleDateString('zh-TW');
+            
+            let timeSlotsText = '';
+            selectedTimeSlots.forEach(slot => {
+                const startTime = slot.getAttribute('data-start');
+                const endTime = slot.getAttribute('data-end');
+                timeSlotsText += `<div>${startTime} - ${endTime}</div>`;
+            });
+            
+            successResult.innerHTML = `
+                <div class="success-title">
+                    <i class="fas fa-check-circle"></i> 借用成功！
+                </div>
+                <div class="booking-details">
+                    <div class="detail-item">
+                        <span class="detail-label">會議室：</span>
+                        <span>${roomName}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">借用日期：</span>
+                        <span>${formattedDate}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">借用時間：</span>
+                        <div>${timeSlotsText}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">申請人：</span>
+                        <span>${document.getElementById('applicant-name').value}</span>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-style: italic;">您的借用已成功記錄，可以在「借用時間軸」中查看。</p>
+            `;
+            
+            successResult.style.display = 'block';
+            
+            // 滚动到成功结果
+            successResult.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 保存借用记录
+        function saveBooking(booking) {
+            let bookings = JSON.parse(localStorage.getItem('spaceBookings')) || [];
+            bookings.push(booking);
+            localStorage.setItem('spaceBookings', JSON.stringify(bookings));
+        }
+        
+        // 加载借用记录
+        function loadBookings() {
+            return JSON.parse(localStorage.getItem('spaceBookings')) || [];
+        }
+        
+        // 初始化时间轴
+        function initTimeline() {
+            refreshTimeline();
+        }
+        
+        // 刷新时间轴
+        function refreshTimeline() {
+            const timelineContent = document.getElementById('timeline-content');
+            const currentDateElem = document.getElementById('current-date');
+            const bookings = loadBookings();
+            
+            // 获取今天的日期
+            const today = new Date();
+            const timelineDate = timelineDateStr ? new Date(timelineDateStr) : today;
+            
+            // 格式化日期显示
+            const dateStr = timelineDate.toISOString().split('T')[0];
+            const displayDate = timelineDate.toLocaleDateString('zh-TW', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            currentDateElem.textContent = displayDate;
+            
+            // 筛选当天的借用记录
+            const dayBookings = bookings.filter(booking => booking.date === dateStr && booking.status === 'approved');
+            
+            // 按会议室分组
+            const roomBookings = {};
+            meetingRooms.forEach(room => {
+                roomBookings[room.id] = [];
+            });
+            
+            dayBookings.forEach(booking => {
+                if (roomBookings[booking.roomId]) {
+                    roomBookings[booking.roomId].push(booking);
+                }
+            });
+            
+            // 生成时间轴内容
+            let timelineHTML = `
+                <div class="timeline-day">
+                    <div class="timeline-slots">
+            `;
+            
+            meetingRooms.forEach(room => {
+                const roomBooking = roomBookings[room.id];
+                
+                timelineHTML += `
+                    <div class="timeline-slot">
+                        <div class="slot-header">
+                            <div class="slot-room">${room.name}</div>
+                            <div class="slot-time">容量: ${room.capacity}人</div>
+                        </div>
+                `;
+                
+                if (roomBooking.length > 0) {
+                    // 按开始时间排序
+                    roomBooking.sort((a, b) => a.startTime.localeCompare(b.startTime));
+                    
+                    roomBooking.forEach(booking => {
+                        timelineHTML += `
+                            <div class="slot-user">
+                                <strong>${booking.startTime} - ${booking.endTime}</strong>: ${booking.name} (${booking.department})
+                            </div>
+                        `;
+                    });
+                } else {
+                    timelineHTML += `
+                        <div class="slot-user" style="color: #6c757d; font-style: italic;">
+                            暫無借用記錄
+                        </div>
+                    `;
+                }
+                
+                timelineHTML += `</div>`;
+            });
+            
+            timelineHTML += `
+                    </div>
+                </div>
+            `;
+            
+            timelineContent.innerHTML = timelineHTML;
+        }
+        
+        // 改变时间轴日期
+        function changeTimelineDate(days) {
+            const currentDate = timelineDateStr ? new Date(timelineDateStr) : new Date();
+            currentDate.setDate(currentDate.getDate() + days);
+            timelineDateStr = currentDate.toISOString().split('T')[0];
+            refreshTimeline();
+        }
+        
+        // 显示提示消息
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            
+            container.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}
+                </div>
+            `;
+            
+            // 5秒后自动清除提示
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        // 全局变量
+        let timelineDateStr = null;
+    </script>
+</body>
+</html>
