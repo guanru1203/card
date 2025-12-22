@@ -1,283 +1,34 @@
-<!doctype html>
-<html><head>
-<meta charset="utf-8">
-<title>後護系首頁</title>
-</head>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>弘光護理系介紹</title>
   <style>
- a {
+  
+a {
       text-decoration: none;
       font-weight: bold;
-	color:#000000;
     }
-  /**學習資源**/
-.LearningResources {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-image: url('https://nur.hk.edu.tw/wp-content/uploads/2025/05/0O3A8277-scaled.jpg'); /* 替換成你的圖片網址 */
-  background-size: cover;
-  background-position: center;
-  height: 500px;
-  padding-left: 5%;
-	margin-top: 0;
-}
-
-.button-group {
-  width: 50vw; /* 占畫面一半寬 */
- margin-left: 30px;
-  display: grid;
-  grid-template-columns: repeat(2, 180px);
-  grid-gap: 15px;
-}
-
-.button-group button {
-	width: 180px;
-	height: 180px;
-  padding:20px;
-	
-  font-size:40px;
-  font-weight: 600;
-  border: none;
-  border-radius:12px;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.3s;
-   
   
-}
 
-.button-group button:hover {
-  background-color: #007bff;
-	color: #ffffff;
-}
-
-.button-group button img {
-  transition: filter 0.3s ease;
-  filter: brightness(0) invert(0); /* 原本黑色 */
-}
-
-.button-group button:hover img {
-  filter: brightness(0) invert(1); /* 變成白色 */
-}
-	  
-@media (max-width: 600px) {
-  .LearningResources {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    padding: 20px 10px;
-    text-align: center;
-  }
-
-  .button-group {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 0;
-    gap: 15px;
-  }
-
-  .button-group button {
-    width: 80%;
-    max-width: 250px;
-    height: auto;
-    font-size: 24px;
-    padding: 16px;
-  }
-
-  .button-group button img {
-    width: 40%;
-    margin-bottom: 8px;
-  }
-}	  
-	  
- /* Modal 基本樣式 */
-    .modal {
-      position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4); /* 背景半透明 */
-  display: none; /* 一開始隱藏 */
-    }
-
-    .modal-content {
-    position: absolute; /* 讓 JS 可以動態設定位置 */
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  text-align: center;
-    }
-
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-	  
-	  
-	  
- /**校園生活**/	  
-.schoollife {
-      display: flex;
-      width: 100%;
-      height: 500px;
-	  background-image: url('https://nur.hk.edu.tw/wp-content/uploads/2025/05/未命名設計-2.png');
-    }
-    .left {
-      width: 33.33%;
-      background-size: cover;
-      background-position: center;
-    }
-    .right {
-      width: 66.67%;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-    }		  
-	  
-.button-row {
-  display: flex;
-  flex-wrap: nowrap; /* 不換行 */
-  gap: 10px;
-  overflow-x: auto;  /* 如內容太寬可橫向捲動 */
-  padding: 10px 0;
-}
-.button-row button {
-  white-space: nowrap;/* 防止按鈕文字換行 */
-  padding: 10px 16px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  flex-shrink: 0; /* 防止被壓縮 */
-}
-
-    .button-row button:hover {
-      background-color: #0056b3;
-    }	 
-	  
-	.content {
-      flex: 1;
-      display: none;
-    }
-    .content.active {
-      display: block;
-		
-    }  
-	  
-	.image-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px; /* 圖片間距 */
-      padding: 10px;
-    }
-    .image-row img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-    .image-container {
-      flex: 1;
-    }  
-	  
-	 @media (max-width: 600px) {
-  .schoollife {
-    flex-direction: column; /* 讓 left/right 垂直排列 */
-    height: auto;
-  }
-
-  .left {
-    width: 100%;
-    height: 0px; /* 可以調整 */
-  }
-
-  .right {
-    width: 100%;
-    padding: 10px;
-    align-items: center;
-  }
-
-  .button-row {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .button-row button {
-    width: 45%;
-    max-width: 150px;
-    text-align: center;
-  }
-
-  .image-row {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .image-container {
-    flex: 0 0 48%;
-    max-width: 48%;
-  }
-
-  .content {
-    width: 100%;
-  }
-}
-/**annousement**/
-.Announcements {
-     width: 100%;
-      background-color:#ffffff;
-      padding: 40px;
-      box-sizing: border-box;
-	
-    }
-	  
-  .announcement {
-	  
-      background-color:#F0F0F0 ;
-      padding: 20px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 28px;
-      cursor: pointer;
-    }
-  .announcement + .announcement {
-      border-top: none;
-    }
-
-    .arrow {
-      font-size: 24px;
-    }
-
-    .announcement:hover {
-      background-color:#0080FF;
-		color:#ffffff;
-    }	  
-
-<!--honor-->
-h2 {
+    h2 {
       color:#066a8f;
       border-bottom: 2px solid #cce7ed;
       padding-bottom: 0.5rem;
       margin-bottom: 1rem;
     }
-.honor-gallery {
+
+    .sub-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .sub-section h3 {
+      margin-bottom: 0.3rem;
+      color: #225b63;
+    }
+
+	.honor-gallery {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -317,246 +68,420 @@ h2 {
   .honor-item {
     flex: 1 1 calc(50% - 1rem);
     max-width: calc(50% - 1rem);  
+  }
+	   .btn-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-group button {
+        width: 100%;
+        max-width: 300px;
+      }  
+	  
   }	  
 	  
-  </style>
+    /* 按鈕區 */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
 
-	
-	<body>
-		
-		
+    .btn-group button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      background-color: #007b8f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      min-width: 120px;
+    }
 
+    .btn-group button:hover,
+    .btn-group button.active {
+      background-color: #005f6b;
+    }
 
-<!-- 得獎與成就 -->
-		
-<section id="honor">
-  <h2>榮譽榜專區</h2>
-  <div class="honor-gallery">
-	<div class="honor-item">
-      <a href="https://tpr.moe.edu.tw/achievement/plan-detail?id=0cefa29e943eaa96019444073459004a" target="_blank">
-        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/08/賀林美伶老師-獲學門績優計畫.png" >
-        <h5>賀林美伶老師獲學門績優計畫</h5>
-      </a>
-    </div>  
+    /* 內容圖片 */
+    .about-content {
+      display: none;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .about-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-content.active {
+      display: block;
+    }
 	  
-    <div class="honor-item">
-      <a href="https://nurbac.hk.edu.tw/wp-content/uploads/2025/07/學士後護理系-李嘉恩同學恭賀海報.pdf" target="_blank">
-        <img src="https://nurbac.hk.edu.tw/wp-content/uploads/2025/07/1.png" >
-        <h5>114年李嘉恩同學國考勇奪全國第二名</h5>
-      </a>
-    </div>
-    <div class="honor-item">
-      <a href="https://nurbac.hk.edu.tw/wp-content/uploads/2025/07/後護系.pdf" target="_blank">
-        <img src="https://nurbac.hk.edu.tw/wp-content/uploads/2025/07/2.png" >
-        <h5>2025年臺中市專業英文詞彙能力大賽成績優異</h5>
-      </a>
-    </div>
-    <div class="honor-item">
-      <a href="https://nurs.hk.edu.tw/honor3" target="_blank">
-        <img src="" >
-        <h5></h5>
-      </a>
-    </div>
-  </div>
-</section>
-		
-	
-	
-	<!--學習資源-->
-	<br>
-	
-<div class="LearningResources">
-    <div class="button-group">
-      <button onclick="openModal('modal1')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/open-book.png" width="50%"  alt="icon"><br>課程</button>
-      <button onclick="openModal('modal2')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/virtual-reality-glasses.png" width="50%" alt="icon"><br>設備</button>
-      <button onclick="openModal('modal3')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/brain.png" width="50%"  alt="icon"><br>實習</button>
-      <button onclick="openModal('modal4')"><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/suitcase.png" width="50%"  alt="icon"><br>就業</button>
-    </div>	
-</div>	
-	
-<!-- Modal 區塊 -->
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal1')">&times;</span>
-    <h2>課程資訊</h2>
-	<p>在弘光後護系，您將系統性學習完整護理知識，取得基本護理技術認證，並通過仿真國考作為畢業門檻，全方位打造臨床實戰力，為您的護理職涯打下最穩固的基礎。</p>
-    <p><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/課程圖_工作區域-1.png"style="max-width: 100%; height: auto; display: block; margin: 0 auto;"></p>
-  </div>
-</div>
+	  
 
-<div id="modal2" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal2')">&times;</span>
-    <h2>設備資訊</h2>
-	<p>採用最先進教學設備，結合 VR 虛擬實境、沉浸式示教室、情境模擬教室與 OSCE 評量訓練，弘光護理打造最接近臨床實境的學習環境，讓學生學得更深、練得更專業。</p>
-    <p><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/設備.png" style="max-width: 100%; height: auto; display: block; margin: 0 auto;"></p>
-  </div>
-</div>
 
-<div id="modal3" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal3')">&times;</span>
-    <h2>實習資訊</h2>
-    <p>弘光護理與全台多所教學醫院長期合作，包含台大、榮總、光田、中山等知名醫療機構，奠定職場優勢。</p>
-    <p><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/06/實習醫院.png" width="400px" height="300px" style="max-width: 100%; height: auto; display: block; margin: 0 auto;"></p>
-  </div>
-</div>
+.life-category {
+  margin-bottom: 40px;
+}
 
-<div id="modal4" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal4')">&times;</span>
-    <h2>就業資訊</h2>
-    <p >你的護理夢想，不只在醫院！多元出路，從弘光護理出發</p>
-	    <p style="text-align: left;">✅ 臨床護理師（各大醫院、診所）</p>
-	    <p style="text-align: left;">✅ 社區/公衛護理（衛生所、健康促進單位）</p>
-	    <p style="text-align: left;">✅ 長期照護機構與居家護理</p>
-	    <p style="text-align: left;">✅ 學校護理師</p>
-	    <p style="text-align: left;">✅ 企業健康管理顧問</p>
-	    <p style="text-align: left;">✅ 醫療器材/藥品公司護理顧問</p>
-	    <p style="text-align: left;">✅ 護理教育與研究（進修碩博士）</p>
-	    <p style="text-align: left;">✅ 出國考照與海外醫療發展（如美國RN、加拿大、澳洲等）</p>
-  </div>
-</div>
-	
+.life-category h3 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
-<script>
-function openModal(modalId, event) {
-  const modal = document.getElementById(modalId);
-  const content = modal.querySelector('.modal-content');
+.life-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
 
-  // 顯示 modal
-  modal.style.display = "block";
+.life-item {
+  flex: 1 1 calc(25% - 20px);
+  max-width: 250px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
 
-  // 如果提供事件（點擊位置），設定浮出視窗的位置
-  if (event) {
-    const x = event.clientX;
-    const y = event.clientY;
+.life-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
 
-    // 簡單偏移避免剛好遮住按鈕
-    content.style.left = (x + 10) + "px";
-    content.style.top = (y + 10) + "px";
-  } else {
-    // 預設 fallback（放在畫面中央）
-    content.style.left = "50%";
-    content.style.top = "20%";
-    content.style.transform = "translate(-50%, 0)";
+.life-item:hover img {
+  transform: scale(1.05);
+}
+
+.life-item h4 {
+  margin-top: 10px;
+  font-size: 1em;
+}
+	  
+	@media (max-width: 992px) {
+  .life-item {
+    flex: 1 1 calc(50% - 20px);
+  }
+}  
+ @media (max-width: 576px) {
+  .life-item {
+    flex: 1 1 100%;
   }
 }
 
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = "none";
-}
-</script>
-	
-		
-		
-<!--校園生活-->
-<div class="schoollife">
-  <div class="left"></div>
-  <div class="right">
- <br>
-    <div class="button-row">
-      <button class="tab-btn active" data-target="content1">住宿</button>
-      <button class="tab-btn" data-target="content2">美食</button>
-      <button class="tab-btn" data-target="content3">社團</button>
-       <button class="tab-btn" data-target="content4">活動</button>
-    </div>
-    <div id="content1" class="content active">
-		
-		<div class="image-row">
-		   <div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/房型.png" > <h5>超新房型</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/浴室.png" ><h5>乾溼分離浴室</h5></div>  
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/交誼聽.png" ><h5>寬敞交誼聽</h5></div>
-			<div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/健身房.png" ><h5>健身房</h5></div>
-	    </div>
-		
-	</div>
-	 
-    <div id="content2" class="content">
-		  <div class="image-row">
-		   <div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/學生餐廳.png" > <h5>學生餐廳</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/弘櫻館.png" ><h5>弘櫻館-簡餐</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/紅磨坊.png" ><h5>弘磨坊-炸物店</h5></div>
-			<div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/下午茶.png" width="25%"><h5>弘茶館-下午茶</h5></div>
-	      </div>
+	  a .announcement{
+		 color: #000000;  
+	  }
 	  
-	</div>
-    <div id="content3" class="content">
-		<div class="image-row">
-		   <div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/吉他社.png" > <h5>吉他社</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/待問.png" ><h5>火舞社</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/射箭社.png" ><h5>射箭社</h5></div>
-			<div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/熱舞社.png"><h5>熱舞社</h5></div>
-		</div>
-		      <center> <a href="https://hksa.hk.edu.tw/%e7%a4%be%e5%9c%98%e7%b8%bd%e8%a6%bd%e8%a1%a8/" target="_blank"><button style="border-radius:8px; background-color: green; color: white;border: none;font-size:15px;cursor: pointer; display: inline-block;
-  " > 更多社團資訊</button></a></center>
-		</div>
-	  <div id="content4" class="content">
-		<div class="image-row">
-		   <div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/文化體驗.png" > <h5>異國文化體驗</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/國際交流.png" ><h5>國際交流</h5></div>
-	       <div class="image-container" > <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/展覽與表演.png" ><h5>展覽與表演</h5></div>
-			<div class="image-container" ><img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/原民文化推廣.png" ><h5>原民文化推廣</h5></div>
-		</div>
-		   
-		</div>	
+.announcement-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  font-size: 1.1rem;
+  background-color: #004080;
+  color: #000000;
+  border:none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.announcement-btn:hover {
+  background-color: #0066cc;
+}
+	  
+	  
+/*各項專區*/
+.gallery {
+    display: flex !important;
+    gap: 10px !important;
+}
+
+.gallery-item {
+    position: relative !important;
+    overflow: hidden !important;
+    flex: 1 !important;
+}
+
+.gallery-item img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    transition: transform 0.3s ease !important;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1) !important;
+}
+
+.overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+    font-size: 1.2em !important;
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1 !important;
+}
+	  
+/*影片*/
+  .video-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 900px; /* 控制整體最大寬度 */
+  
+	  margin: 0 auto; /* 讓整個區塊置中 */
+    justify-content: center; /* 區塊內影片也置中 */
+  }
+  .video-item {
+    flex: 1 1 calc(50% - 20px); /* 一列兩個影片 */
+    max-width: 500px; /* 限制單個影片寬度 */
+    aspect-ratio: 16 / 9; /* 橫式比例 */
+    position: relative;
+  }
+  .video-item iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  @media (max-width: 768px) {
+    .video-item {
+      flex: 1 1 100%; /* 手機版一列一個 */
+      max-width: none;
+    }
+  }
+  </style>
+</head>
+<body>
+
+  
+
+<section id="honor">
+  <h2>榮譽榜專區</h2>
+  <div class="honor-gallery">
+	  <div class="honor-item">
+      <a href="https://www.hk.edu.tw/remote/%E3%80%90%E7%8D%B2%E7%8D%8E%E5%85%AC%E5%91%8A%E3%80%91113-1%E5%AD%B8%E6%9C%9F%E5%85%A8%E6%A0%A1%E6%80%A7%E8%AA%B2%E7%A8%8B%E8%A3%9C%E5%8A%A9%E8%A8%88%E7%95%AB%E5%84%AA%E8%89%AF%E8%AA%B2%E7%A8%8B/?a0v5la7bquf89=9c1ce27f524c5ea924egpy00lqyszxob&uy3ubftvh0u6o8=eae98c0c2fea7f4555e556a11647f796&xnfrr0ncac=24291&cc4d76fdaf5=&zsmoi87pih9=&lzzgnpz8d=f9f2b1ef23fe2759c2cad0953029a94b&Q09ORklH=TKD_ST" target="_blank">
+        <img src="https://nurbac.hk.edu.tw/wp-content/uploads/2025/12/後護系榮譽.png" alt="">
+        <h5>恭喜張珠玲主任、陳馥萱老師榮獲113.1學期全校性課程補助計畫優良課程</h5>
+      </a>
+    </div> 
+    <div class="honor-item">
+      <a href="https://www.hk.edu.tw/remote/HKD_33526544/?a0v5la7bquf89=9c1ce27f524c5ea924egpy00lqyszxob&uy3ubftvh0u6o8=eae98c0c2fea7f4555e556a11647f796&xnfrr0ncac=24291&cc4d76fdaf5=&zsmoi87pih9=&lzzgnpz8d=f9f2b1ef23fe2759c2cad0953029a94b&Q09ORklH=TKD_ST" target="_blank">
+        <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/12/4.png" alt="">
+        <h5>恭喜張靖梅主任榮獲113.2學期「優良創新教學課程」</h5>
+      </a>
+    </div>
+    <div class="honor-item">
+      <a href="https://www.hk.edu.tw/remote/%E3%80%90%E7%8D%B2%E7%8D%8E%E5%85%AC%E5%91%8A%E3%80%91113-1%E5%AD%B8%E6%9C%9F%E5%85%A8%E6%A0%A1%E6%80%A7%E8%AA%B2%E7%A8%8B%E8%A3%9C%E5%8A%A9%E8%A8%88%E7%95%AB%E5%84%AA%E8%89%AF%E8%AA%B2%E7%A8%8B/?a0v5la7bquf89=9c1ce27f524c5ea924egpy00lqyszxob&uy3ubftvh0u6o8=eae98c0c2fea7f4555e556a11647f796&xnfrr0ncac=24291&cc4d76fdaf5=&zsmoi87pih9=&lzzgnpz8d=f9f2b1ef23fe2759c2cad0953029a94b&Q09ORklH=TKD_ST" target="_blank">
+        <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/12/5.png" alt="技能競賽冠軍">
+        <h5>恭喜楊惠娟老師、袁光霞老師、李滿梅老師、宋琇鈺老師、榮獲113.1學期「全校性課程補助計畫優良課程」</h5>
+      </a>
+    </div>
    
   </div>
+</section>
+	
+	
+<section>	
+	<h2>各項專區</h2>
+	
+	<div class="gallery">
+  <div class="gallery-item">
+	 <a href="https://nurs.hk.edu.tw/%e5%af%a6%e7%bf%92%e6%95%99%e5%b8%ab/">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/7.png"></a>
+  </div>
+  <div class="gallery-item">
+	  <a href="https://nurs.hk.edu.tw/goodjob/">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/6.png"></a>
+  </div>
+  <div class="gallery-item">
+	  <a href="https://nurs.hk.edu.tw/%e5%aa%92%e9%ab%94%e5%b0%88%e5%8d%80/">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/5.png" ></a>
+  </div>
+  <div class="gallery-item">
+	  <a href="https://nurs.hk.edu.tw/%e5%af%a6%e7%bf%92%e5%ad%b8%e7%94%9f/">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/4.png"></a>
+  </div>
 </div>
-		
-		
+</section>	
 	
-	<!--各項公告-->		
-	<div class="Announcements">
-    <center><h1>各項公告</h1></center>
+	<br>
+<section id="about">
+  <h2>關於護理科</h2>
+  <div class="btn-group">
+    <button class="tab-btn active" data-target="course">課程</button>
+    <button class="tab-btn" data-target="intern">設備</button>
+    <button class="tab-btn" data-target="facility">實習</button>
+    <button class="tab-btn" data-target="life">就業</button>
+  </div>
 
-   <a href="https://nurbac.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e6%b4%bb%e5%8b%95%e8%a8%8a%e6%81%af/" target="_blank"> 
-	   <div class="announcement">
-      活動訊息
-      <span class="arrow">›</span>
-    </div></a>
-		
+  <div id="course" class="about-content active">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/關於護理科-3.png" alt="課程">
+  </div>
+  <div id="intern" class="about-content">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/07/2-1.png" alt="實習">
+  </div>
+  <div id="facility" class="about-content">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/關於護理科-1.png" alt="實習">
+  </div>
+  <div id="life" class="about-content">
+    <img src="https://nurs.hk.edu.tw/wp-content/uploads/2025/08/關於護理科-2.png" alt="就業">
+  </div>
+</section>
+
+
+<br><br>
+  <section id="life">
+  <h2>生活資訊</h2>
+
+  <!-- 住宿 -->
+  <div class="life-category">
+    <h3>學校宿舍</h3>
+    <div class="life-gallery">
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E6%88%BF%E5%9E%8B.png" >
+        <h4>超新房型</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E6%B5%B4%E5%AE%A4.png">
+        <h4>乾溼分離浴室</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E4%BA%A4%E8%AA%BC%E8%81%BD.png" >
+        <h4>寬敞交誼聽</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%81%A5%E8%BA%AB%E6%88%BF.png" >
+        <h4>健身房</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- 美食 -->
+  <div class="life-category">
+    <h3>校園美食</h3>
+    <div class="life-gallery">
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%AD%B8%E7%94%9F%E9%A4%90%E5%BB%B3.png" >
+        <h4>學生餐廳</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%BC%98%E6%AB%BB%E9%A4%A8.png">
+        <h4>弘櫻館-簡餐</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E7%B4%85%E7%A3%A8%E5%9D%8A.png" >
+        <h4>弘磨坊-炸物店</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E4%B8%8B%E5%8D%88%E8%8C%B6.png">
+        <h4>弘茶館-下午茶</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- 社團活動 -->
+  <div class="life-category">
+    <h3> 社團活動</h3>
+    <div class="life-gallery">
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%90%89%E4%BB%96%E7%A4%BE.png">
+        <h4>吉他社</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%BE%85%E5%95%8F.png" >
+        <h4>火舞社</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%B0%84%E7%AE%AD%E7%A4%BE.png" >
+        <h4>射箭社</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E7%86%B1%E8%88%9E%E7%A4%BE.png" >
+        <h4>熱舞社</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- 校園活動 -->
+  <div class="life-category">
+    <h3>校園活動</h3>
+    <div class="life-gallery">
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E6%96%87%E5%8C%96%E9%AB%94%E9%A9%97.png" >
+        <h4>異國文化體驗</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%9C%8B%E9%9A%9B%E4%BA%A4%E6%B5%81.png" >
+        <h4>國際交流</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%B1%95%E8%A6%BD%E8%88%87%E8%A1%A8%E6%BC%94.png" >
+        <h4>展覽與表演</h4>
+      </div>
+      <div class="life-item">
+        <img src="https://nur.hk.edu.tw/wp-content/uploads/2025/05/%E5%8E%9F%E6%B0%91%E6%96%87%E5%8C%96%E6%8E%A8%E5%BB%A3.png" >
+        <h4>原民文化推廣</h4>
+      </div>
+    </div>
+  </div>
+</section>
+	<br>
+	<!--各項公告-->	
 	
-	<a href="https://nurbac.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e5%90%84%e5%bc%8f%e7%8d%8e%e5%ad%b8%e9%87%91/" target="_blank"> 	
-    <div class="announcement">
-     獎學金資訊
-      <span class="arrow">›</span>
-    </div></a>
-	<a href="https://nurbac.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e5%b0%b1%e6%a5%ad%e8%b3%87%e8%a8%8a/" target="_blank"> 
-    <div class="announcement">
-     就業資訊
-      <span class="arrow">›</span>
-    </div></a>
-	<a href="https://nurbac.hk.edu.tw/%e5%b0%b1%e6%a5%ad%e8%bc%94%e5%b0%8e/" target="_blank"> 
-    <div class="announcement">
-     就業輔導
-      <span class="arrow">›</span>
-    </div></a>
-  </div>	
-		
-		
+<section id="Announcements">
+  <h2>各項公告</h2>
+  <div class="Announcements">
 
-<script>
-  const buttons = document.querySelectorAll('.tab-btn');
-  const contents = document.querySelectorAll('.content');
+    <a href="https://nurs.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e6%b4%bb%e5%8b%95%e8%a8%8a%e6%81%af/" target="_blank" class="announcement-btn ">活動訊息</a>
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // 移除所有 active 樣式
-      buttons.forEach(b => b.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
+    <a href="https://nurs.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e5%90%84%e5%bc%8f%e7%8d%8e%e5%ad%b8%e9%87%91/" target="_blank" class="announcement-btn">各式獎學金</a>
 
-      // 加上目前 active
-      btn.classList.add('active');
-      const targetId = btn.getAttribute('data-target');
-      document.getElementById(targetId).classList.add('active');
-    });
-  });
+    <a href="https://nurs.hk.edu.tw/category/%e7%b3%bb%e6%89%80%e5%85%ac%e5%91%8a/%e5%b0%b1%e6%a5%ad%e8%b3%87%e8%a8%8a/" target="_blank" class="announcement-btn">就業資訊</a>
 
-</script>		
-		
-		
-		
+    <a href="https://nurs.hk.edu.tw/%e6%a6%ae%e8%ad%bd%e6%a6%9c/" target="_blank" class="announcement-btn">榮譽榜</a>
+
+    <a href="https://nurold.hk.edu.tw/hire/property.php" target="_blank" class="announcement-btn">會議室及財產借用</a>
+
+  </div>
+</section>
+	<br>
+<section >
+  <h2>招生影片</h2>	
+<div class="video-row">
+  <div class="video-item">
+    <iframe src="https://www.youtube.com/embed/jTD3RbKdIpY" title="YouTube video player" allowfullscreen></iframe>
+  </div>
+  <div class="video-item">
+    <iframe  src="https://www.youtube.com/embed/EWmfGrD8G54?si=I_UzcPIMH8lXUWSN" title="YouTube video player" allowfullscreen></iframe>
+  </div>
+	</div>
+	</section>
 </body>
 </html>
